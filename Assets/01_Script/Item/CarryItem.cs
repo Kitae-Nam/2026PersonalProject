@@ -8,12 +8,18 @@ public class CarryItem : MonoBehaviour
     [SerializeField] private Transform _detectPoint;
     [SerializeField] private Vector3 _detectSize;
     private GameObject _carriedItem;
+    private Item _carriedItemScript;
 
-    [SerializeField] private GridLayout _gridLayout;
+    private GridLayout _gridLayout;
 
-    private bool _isCarryItem = false;
-    public bool IsCarryItem { get { return _isCarryItem; } }
+    private bool _isCarryEquip = false;
+    public GameObject CarriedItem { get { return _carriedItem; } }
+    public bool IsCarryEpuip { get { return _isCarryEquip; } }
 
+    private void Awake()
+    {
+        _gridLayout = GameManager.Instance._groundGrid;
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -35,18 +41,20 @@ public class CarryItem : MonoBehaviour
         if (itemsInRange.Length > 0)
         {
             _carriedItem = itemsInRange[0].gameObject;
-            if (_carriedItem.layer == LayerMask.NameToLayer("EquipItem"))
+            _carriedItemScript = _carriedItem.GetComponent<Item>();
+
+            if (_carriedItemScript._itemSO._itemType == ItemType.Equipment)
             {
                 _carriedItem.transform.SetParent(_equipCarryPoint);
                 _carriedItem.transform.localPosition = new Vector3(_itemCarryPoint.localPosition.x, 0, _itemCarryPoint.localPosition.z);
                 _carriedItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
-                _isCarryItem = false;
+                _isCarryEquip = true;
             }
             else
             {
                 _carriedItem.transform.SetParent(_itemCarryPoint);
                 _carriedItem.transform.localPosition = new Vector3(_itemCarryPoint.localPosition.x, 0, _itemCarryPoint.localPosition.z);
-                _isCarryItem = true;
+                _isCarryEquip = false;
             }
         }
     }
@@ -54,14 +62,14 @@ public class CarryItem : MonoBehaviour
     {
         _carriedItem.transform.SetParent(null);
 
-        if (_isCarryItem == false)
-           _carriedItem.transform.rotation = Quaternion.Euler(90, 0, 0);
+        if (_carriedItemScript._itemSO._itemType == ItemType.Equipment)
+           _carriedItem.transform.rotation = Quaternion.Euler(0, 0, 0);
 
         Vector3 dropPosition = _gridLayout.WorldToCell(transform.position);
         _carriedItem.transform.position = dropPosition;
 
         _carriedItem = null;
-        _isCarryItem = false;
+        _isCarryEquip = false;
     }
     private void OnDrawGizmos()
     {
