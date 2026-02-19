@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ca3aecf3a42dd24290cee35236b3f9b, type: 3}
-  m_Name: Pickaxe
+  m_Script: {fileID: 11500000, guid: 5679d10ed00b4fb44847c01777e1b885, type: 3}
+  m_Name: Tree
   m_EditorClassIdentifier: 
-  _itemType: 2
-  _equipmentType: 2
+  _harvestCount: 3
+  _harvestedPrefab: {fileID: 0}

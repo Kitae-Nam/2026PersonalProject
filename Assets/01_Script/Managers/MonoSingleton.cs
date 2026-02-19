@@ -1,34 +1,39 @@
 using UnityEngine;
 
-public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
+public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static object lockobject = new object();
-    private static T instance;
-    private static bool isQuitting = false;
+    private static T _instance;
 
     public static T Instance
     {
         get
         {
-            lock(lockobject)
+            if (_instance == null)
             {
-                if (isQuitting)
+                _instance = FindFirstObjectByType<T>();
+                if (_instance == null)
                 {
-                    return null;
+                    GameObject singleton = new GameObject(typeof(T).Name);
+                    _instance = singleton.AddComponent<T>();
                 }
-                
-                if(instance == null)
-                {
-                    instance = GameObject.Instantiate(Resources.Load<T>("MonoSingleton" + typeof(T).Name));
-                    DontDestroyOnLoad(instance.gameObject);
-                }
-                return instance;
             }
+
+            return _instance;
         }
+
     }
-    private void OnDisable()
+
+    protected virtual void Awake()
     {
-        isQuitting = false;
-        instance = null;
+        T[] managers = FindObjectsByType<T>(FindObjectsSortMode.None);
+
+        if (managers.Length > 1)
+            Destroy(gameObject);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
 }

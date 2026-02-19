@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    public GridLayout _groundGrid;
+    public Tilemap _groundTile;
     public GameObject _player;
 }
