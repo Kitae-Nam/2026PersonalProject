@@ -100,6 +100,7 @@ public class CarryItem : MonoBehaviour
                     {
                         itemDummy.PushItem(item);
                     }
+                    _currentCarryItemCount = 0;
                     _itemStack.Clear();
 
                     Debug.Log("piled up");
@@ -118,6 +119,7 @@ public class CarryItem : MonoBehaviour
             {
                 newItemPile.PushItem(item);
             }
+            _currentCarryItemCount = 0;
             _itemStack.Clear();
         }
     }
