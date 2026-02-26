@@ -8,4 +8,5 @@ public class ItemSO : ScriptableObject
 
     public Vector3 _itemCarryPos;
     public Vector3 _additionalCarryPos;
+    public Vector3 _onGroundPos;
 }

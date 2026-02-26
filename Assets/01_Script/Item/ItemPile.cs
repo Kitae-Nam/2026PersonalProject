@@ -61,7 +61,7 @@ public class ItemPile : MonoBehaviour
         }
         else
         {
-            item.gameObject.transform.localPosition = Vector3.zero;
+            item.gameObject.transform.localPosition = item._itemSO._onGroundPos;
         }
     }
 }
