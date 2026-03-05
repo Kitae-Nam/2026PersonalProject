@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ca3aecf3a42dd24290cee35236b3f9b, type: 3}
-  m_Name: TestMaterialItem
+  m_Name: Log
   m_EditorClassIdentifier: 
-  _itemType: 0
-  _materialType: 0
+  _itemType: 1
+  _materialType: 1
   _equipmentType: 0
   _itemCarryPos: {x: 0, y: 1, z: 0}
   _additionalCarryPos: {x: 0, y: 1, z: 0}
-  _onGroundPos: {x: 0, y: -1, z: 0}
-  _onGroundAdditionalPos: {x: 0, y: 0.1, z: 0}
+  _onGroundPos: {x: 0, y: 1, z: 0}
+  _onGroundAdditionalPos: {x: 0, y: 1, z: 0}

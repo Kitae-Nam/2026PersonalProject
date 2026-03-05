@@ -1,25 +1,32 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    private Rigidbody _rigid;
+    [SerializeField] private PlayerInputSO _playerInput;
     [SerializeField] private float _moveSpeed = 5f;
-    private float _xAxis;
-    private float _zAxis;
+
+    private Vector3 _movementDirection;
+    private Rigidbody _rigid;
 
     private void Awake()
     {
+        _playerInput.OnMovementChange += HandleMoveInput;
         _rigid = GetComponent<Rigidbody>();
     }
-    private void Update()
+    private void OnDestroy()
     {
-        _xAxis = Input.GetAxisRaw("Horizontal");
-        _zAxis = Input.GetAxisRaw("Vertical");
+        _playerInput.OnMovementChange -= HandleMoveInput;
+    }
+
+    private void HandleMoveInput(Vector2 movementInput)
+    {
+        _movementDirection = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
     }
 
     private void FixedUpdate()
     {
-        Vector3 velocity = new Vector3(_xAxis, 0f, _zAxis).normalized * _moveSpeed;
-        _rigid.linearVelocity = velocity;
+        _rigid.linearVelocity = _movementDirection * _moveSpeed;
     }
 }

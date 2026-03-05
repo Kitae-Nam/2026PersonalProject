@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5679d10ed00b4fb44847c01777e1b885, type: 3}
-  m_Name: Tree
+  m_Script: {fileID: 11500000, guid: 6d4be426342439c4fa4d2d46cf1a3a99, type: 3}
+  m_Name: PlayerInputSO
   m_EditorClassIdentifier: 
-  _harvestCount: 3
-  _harvestedPrefab: {fileID: 5523410306157101950, guid: d5ac6550b7c3d6d45b447144cb236dd4, type: 3}

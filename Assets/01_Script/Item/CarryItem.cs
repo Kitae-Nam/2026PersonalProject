@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class CarryItem : MonoBehaviour
 {//todo: 아이템 줍는데 여러개가 쌓일 수 있게, 아이템 버릴때 같은 아이템이면 쌓이게
+    [SerializeField] private PlayerInputSO _playerInput;
     [SerializeField] private ItemPile _itemPilePrefab;
 
     [SerializeField] private LayerMask _itemPileLayers;
@@ -19,36 +20,49 @@ public class CarryItem : MonoBehaviour
     public int _currentCarryItemCount = 0;
 
     private Stack<Item> _itemStack = new Stack<Item>();
-    private bool IsCarryItem => _itemStack.Count > 0;
+
+    private ItemType _currentCarryItemType = ItemType.None;
+    private MaterialType _currentCarryMaterialType = MaterialType.None;
+    private EquipmentType _currentCarryEquipmentType = EquipmentType.None;
+
+    public bool IsCarryItem { get { return _itemStack.Count > 0; } }
     private Tilemap _groundTile => GameManager.Instance._groundTile;
 
-
+    private void Awake()
+    {
+        _playerInput.OnInteractionChange += HandleItemImput;
+    }
+    private void OnDestroy()
+    {
+        _playerInput.OnInteractionChange -= HandleItemImput;
+    }
     private void Update()
     {
         _timer += Time.deltaTime;
-        HandleItemImput();
     }
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collision)//아이템을 들고 있고 들고 있는 아이템이 아니고 더 들수 있으면 든다
     {
-        if (_itemStack.Contains(collision.gameObject.GetComponent<Item>()) == true)
-            return;
-        if ((_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0 && IsCarryItem == true)
-        {
-            if (collision.TryGetComponent<ItemPile>(out ItemPile itemDummy))
-            {
-                Item itemFromPile = itemDummy.PopItem();
-                if (itemFromPile != null)
-                {
-                    TryPickUp(itemFromPile);
-                }
+        if (_canCarryItemCount <= _currentCarryItemCount) return;
 
+        bool isItemPileLayer = (_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0;
+        if (isItemPileLayer && IsCarryItem)
+        {
+            if (collision.TryGetComponent<ItemPile>(out ItemPile itemPile))
+            {
+                if (itemPile._itemStack.Count == 0) return;
+
+                if (CanPileOn(itemPile))
+                {
+                    Item topItem = itemPile.PopItem();
+                    TryPickUp(topItem);
+                }
             }
         }
     }
 
     private void HandleItemImput()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame && _timer <= _pickUpDelay)
+        if (_timer >= _pickUpDelay)
         {
             if (IsCarryItem == false)     //들고 있는 아이템이 있다면(아이템 줍기)
             {
@@ -96,15 +110,21 @@ public class CarryItem : MonoBehaviour
             {
                 if (collider.TryGetComponent<ItemPile>(out ItemPile itemDummy))
                 {
-                    foreach (var item in _itemStack)
+                    if (CanPileOn(itemDummy))
                     {
-                        itemDummy.PushItem(item);
+                        foreach (var item in _itemStack)
+                        {
+                            itemDummy.PushItem(item);
+                            Debug.Log("piled up");
+                        }
+                        _currentCarryItemCount = 0;
+                        _itemStack.Clear();
+                        return;
                     }
-                    _currentCarryItemCount = 0;
-                    _itemStack.Clear();
-
-                    Debug.Log("piled up");
-                    break;
+                    else
+                    {
+                        return;
+                    }
                 }
             }
         }
@@ -121,9 +141,22 @@ public class CarryItem : MonoBehaviour
             }
             _currentCarryItemCount = 0;
             _itemStack.Clear();
+            Debug.Log("dropped");
         }
+        _currentCarryItemType = ItemType.None;
+        _currentCarryMaterialType = MaterialType.None;
+        _currentCarryEquipmentType = EquipmentType.None;
     }
 
+    private bool CanPileOn(ItemPile pile)
+    {
+        if (pile._itemStack.Count == 0) return true;
+
+        var topSO = pile._itemStack.Peek()._itemSO;
+        return topSO._itemType == _currentCarryItemType &&
+               topSO._materialType == _currentCarryMaterialType &&
+               topSO._equipmentType == _currentCarryEquipmentType;
+    }
 
     private void TryPickUp(Item item)
     {
@@ -134,15 +167,21 @@ public class CarryItem : MonoBehaviour
 
         _currentCarryItemCount++;
 
-        if (_currentCarryItemCount <= 0)    //아이템을 안 들고 있음
+        if (_currentCarryItemCount <= 1)    //아이템을 안 들고 있음
         {
+            Debug.Log("picked up first item");
             _itemStack.Push(item);
+
+            _currentCarryItemType = item._itemSO._itemType;
+            _currentCarryMaterialType = item._itemSO._materialType;
+            _currentCarryEquipmentType = item._itemSO._equipmentType;
 
             //아이템 들어서 위치 조정
             ItemPosEdit(item, item._itemSO._itemCarryPos);
         }
         else
         {
+            Debug.Log("picked");
             _itemStack.Push(item);
 
             ItemPosEdit(item,

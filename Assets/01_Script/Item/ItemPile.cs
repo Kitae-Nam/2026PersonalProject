@@ -7,6 +7,7 @@ public class ItemPile : MonoBehaviour
     public List<Item> _itemList;
 
     public Item[] _toPushDirectlyItem;
+    public int count => _itemStack.Count;
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class ItemPile : MonoBehaviour
             Item item = _itemStack.Pop();
 
             item.gameObject.transform.SetParent(null);
+            Debug.Log(_itemStack.Count);
             return item;
         }
         return null;
@@ -55,7 +57,7 @@ public class ItemPile : MonoBehaviour
 
     private void PositionEdit(Item item)
     {
-        if (_itemStack.Count > 0)        //아이템이 있을때
+        if (_itemStack.Count > 1)        //아이템이 있을때
         {
             item.gameObject.transform.localPosition = new Vector3(0, _itemStack.Count * item._itemSO._additionalCarryPos.y, 0);
         }

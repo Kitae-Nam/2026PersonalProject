@@ -4,9 +4,11 @@ using UnityEngine;
 public class ItemSO : ScriptableObject
 {
     public ItemType _itemType;
+    public MaterialType _materialType; 
     public EquipmentType _equipmentType;
 
     public Vector3 _itemCarryPos;
     public Vector3 _additionalCarryPos;
     public Vector3 _onGroundPos;
+    public Vector3 _onGroundAdditionalPos;
 }

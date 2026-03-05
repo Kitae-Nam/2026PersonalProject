@@ -10,6 +10,13 @@ public enum ItemType
     Material,
     Equipment,
 }
+public enum MaterialType
+{
+    None,
+    Wood,
+    Rock,
+}
+
 public enum EquipmentType
 {
     None,
