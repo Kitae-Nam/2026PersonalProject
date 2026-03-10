@@ -5,7 +5,6 @@ using UnityEngine.Tilemaps;
 
 public class CarryItem : MonoBehaviour
 {//todo: 아이템 줍는데 여러개가 쌓일 수 있게, 아이템 버릴때 같은 아이템이면 쌓이게
-    [SerializeField] private PlayerInputSO _playerInput;
     [SerializeField] private ItemPile _itemPilePrefab;
 
     [SerializeField] private LayerMask _itemPileLayers;
@@ -26,16 +25,9 @@ public class CarryItem : MonoBehaviour
     private EquipmentType _currentCarryEquipmentType = EquipmentType.None;
 
     public bool IsCarryItem { get { return _itemStack.Count > 0; } }
+    public Stack<Item> ItemStack { get { return _itemStack; } }
     private Tilemap _groundTile => GameManager.Instance._groundTile;
 
-    private void Awake()
-    {
-        _playerInput.OnInteractionChange += HandleItemImput;
-    }
-    private void OnDestroy()
-    {
-        _playerInput.OnInteractionChange -= HandleItemImput;
-    }
     private void Update()
     {
         _timer += Time.deltaTime;
@@ -60,7 +52,7 @@ public class CarryItem : MonoBehaviour
         }
     }
 
-    private void HandleItemImput()
+    public void HandleItemImput()
     {
         if (_timer >= _pickUpDelay)
         {

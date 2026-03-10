@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 7444603987118911171}
   - component: {fileID: 7055079007177823278}
   - component: {fileID: 2795267468370637087}
+  - component: {fileID: 401861702847100707}
   - component: {fileID: 8954310082761635094}
   - component: {fileID: 8919776824776038572}
   - component: {fileID: 26355365372214024}
@@ -173,6 +174,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &401861702847100707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6668653652354059505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f01d91a5ca465c4388889f882e17969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerInput: {fileID: 11400000, guid: 09c9b7f47bf12e943abd9cb46bea921c, type: 2}
+  _carryItem: {fileID: 8919776824776038572}
+  _playerMove: {fileID: 8954310082761635094}
+  _equipItemUse: {fileID: 26355365372214024}
 --- !u!114 &8954310082761635094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,7 +219,7 @@ MonoBehaviour:
   _itemPileLayers:
     serializedVersion: 2
     m_Bits: 1024
-  _itemCarryRange: {x: 2, y: 2, z: 2}
+  _itemCarryRange: {x: 1, y: 1, z: 1}
   _itemCarryOffset: {x: 0, y: 0, z: 0}
   _itemCarryParent: {fileID: 7143976789684015517}
   _pickUpDelay: 0.5
@@ -226,6 +243,6 @@ MonoBehaviour:
   _rockLayer:
     serializedVersion: 2
     m_Bits: 512
-  _useRange: 1.5
+  _useRange: {x: 0, y: 0, z: 0}
   _useDelay: 1
   _useOffset: {x: 0, y: 0, z: 1.25}
