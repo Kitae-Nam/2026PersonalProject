@@ -13,6 +13,7 @@ public class EquipItemUse : MonoBehaviour
     [SerializeField] private float _useDelay = 1f;
 
     private float _timer = 0f;
+    private ItemSO _topItem;
 
     private void Awake()
     {
@@ -28,32 +29,20 @@ public class EquipItemUse : MonoBehaviour
         {
             if (_carryItem.IsCarryItem == false) return;
 
-            ItemSO topItem = _carryItem.ItemStack.Peek()._itemSO;
-            if (topItem._itemType == ItemType.Equipment)//todo : 장비 아이템 종류에 따라 레이어 달리하기, 근데 물병은 달라야함...
-            {
-                Collider[] colliders = Physics.OverlapBox(transform.position + _useOffset, _useRange, Quaternion.identity, LayerSelect(topItem._equipmentType));
+            if(_topItem == null)
+                _topItem = _carryItem.ItemStack.Peek()._itemSO;
 
-                if(colliders.Length > 0)
-                {
-                    colliders[0].GetComponent<HarvestableObject>()?.Harvest();
-                }
+            if (_topItem._itemType == ItemType.Equipment)
+            {
+
             }
+            _timer = 0;
         }
     }
 
-    private LayerMask LayerSelect(EquipmentType equipmentType)
+    private void EquipmentUse()
     {
-        switch (equipmentType)
-        {
-            case EquipmentType.Pickaxe:
-                return _rockLayer;
-            case EquipmentType.Axe:
-                return _treeLayer;
-            case EquipmentType.Bucket:
-                return _waterLayer;
-            default:
-                return 0;
-        }
+        
     }
 
     private void OnDrawGizmos()

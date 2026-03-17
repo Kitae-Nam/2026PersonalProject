@@ -6,6 +6,12 @@ public abstract class HarvestableObject : MonoBehaviour
     public HarvestableSO harvestableSO;
     public int _currentHarvestCount;
 
+    protected virtual void Awake()
+    {
+        if (ObjPositionManager.Instance == null) return;
+
+        ObjPositionManager.Instance.AddHavaObjPosition(this.transform);
+    }
     private void Start()
     {
         _currentHarvestCount = harvestableSO._harvestCount;

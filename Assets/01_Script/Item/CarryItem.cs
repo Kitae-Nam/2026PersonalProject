@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class CarryItem : MonoBehaviour
-{//todo: 아이템 줍는데 여러개가 쌓일 수 있게, 아이템 버릴때 같은 아이템이면 쌓이게
+{
     [SerializeField] private ItemPile _itemPilePrefab;
 
     [SerializeField] private LayerMask _itemPileLayers;
-    [SerializeField] private Vector3 _itemCarryRange;
+    [SerializeField] private float _itemCarryRange;
     [SerializeField] private Vector3 _itemCarryOffset;
     [SerializeField] private Transform _itemCarryParent;
     [SerializeField] private float _pickUpDelay = 0.5f;
@@ -32,7 +31,7 @@ public class CarryItem : MonoBehaviour
     {
         _timer += Time.deltaTime;
     }
-    private void OnTriggerEnter(Collider collision)//아이템을 들고 있고 들고 있는 아이템이 아니고 더 들수 있으면 든다
+    private void OnTriggerEnter(Collider collision)
     {
         if (_canCarryItemCount <= _currentCarryItemCount) return;
 
@@ -56,77 +55,75 @@ public class CarryItem : MonoBehaviour
     {
         if (_timer >= _pickUpDelay)
         {
-            if (IsCarryItem == false)     //들고 있는 아이템이 있다면(아이템 줍기)
+            if (IsCarryItem == false)
             {
                 Debug.Log("start");
                 ItemPickUpProcess();
             }
-            else        //아이템 버리기
+            else
             {
                 Debug.Log("drop");
                 ItemDropProcess();
             }
+            _timer = 0f;
         }
-        _timer = 0f;
     }
 
     private void ItemPickUpProcess()
     {
-        Collider[] colliders = Physics.OverlapBox(transform.position + _itemCarryOffset, _itemCarryRange, Quaternion.identity, _itemPileLayers);
+        Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
 
-        if (colliders.Length > 0)//아이템 더미가 있다면
+        if (nearObj != null)
         {
-            foreach (var collider in colliders)
+            if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
             {
-                if (collider.TryGetComponent<ItemPile>(out ItemPile itemDummy))
+                Item itemFromPile = itemDummy.PopItem();
+                if (itemFromPile != null)
                 {
-                    Item itemFromPile = itemDummy.PopItem();
-                    if (itemFromPile != null)
-                    {
-                        Debug.Log("picked up");
-                        TryPickUp(itemFromPile);
-                        break;
-                    }
+                    Debug.Log("picked up");
+                    TryPickUp(itemFromPile);
                 }
             }
+        }
+        else
+        {
+            Debug.Log("itempile null");
         }
     }
 
     private void ItemDropProcess()
     {
-        Collider[] colliders = Physics.OverlapBox(transform.position + _itemCarryOffset, _itemCarryRange, Quaternion.identity, _itemPileLayers);
+        Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
 
-        if (colliders.Length > 0)   //아이템 더미가 있다면
+        if (nearObj != null)
         {
-            foreach (var collider in colliders)
+            if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
             {
-                if (collider.TryGetComponent<ItemPile>(out ItemPile itemDummy))
+                if (CanPileOn(itemDummy))
                 {
-                    if (CanPileOn(itemDummy))
+                    foreach (var item in _itemStack)
                     {
-                        foreach (var item in _itemStack)
-                        {
-                            itemDummy.PushItem(item);
-                            Debug.Log("piled up");
-                        }
-                        _currentCarryItemCount = 0;
-                        _itemStack.Clear();
-                        return;
+                        itemDummy.PushItem(item);
+                        Debug.Log("piled up");
                     }
-                    else
-                    {
-                        return;
-                    }
+                    _currentCarryItemCount = 0;
+                    _itemStack.Clear();
+                    return;
+                }
+                else
+                {
+                    return;
                 }
             }
         }
-        else    //아이템 더미가 없다면
+        else
         {
             Vector3Int cellPos = _groundTile.WorldToCell(transform.position);
             Vector3 dropPos = _groundTile.GetCellCenterWorld(cellPos);
             dropPos.y = 1;
 
             ItemPile newItemPile = Instantiate(_itemPilePrefab, dropPos, Quaternion.identity);
+            newItemPile.transform.SetParent(GameManager.Instance._ItemPileParent);
             foreach (var item in _itemStack)
             {
                 newItemPile.PushItem(item);
@@ -159,7 +156,7 @@ public class CarryItem : MonoBehaviour
 
         _currentCarryItemCount++;
 
-        if (_currentCarryItemCount <= 1)    //아이템을 안 들고 있음
+        if (_currentCarryItemCount <= 1)
         {
             Debug.Log("picked up first item");
             _itemStack.Push(item);
@@ -168,7 +165,6 @@ public class CarryItem : MonoBehaviour
             _currentCarryMaterialType = item._itemSO._materialType;
             _currentCarryEquipmentType = item._itemSO._equipmentType;
 
-            //아이템 들어서 위치 조정
             ItemPosEdit(item, item._itemSO._itemCarryPos);
         }
         else
@@ -191,6 +187,6 @@ public class CarryItem : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position + _itemCarryOffset, _itemCarryRange);
+        Gizmos.DrawWireSphere(transform.position + _itemCarryOffset, _itemCarryRange);
     }
 }

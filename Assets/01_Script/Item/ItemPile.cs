@@ -15,6 +15,9 @@ public class ItemPile : MonoBehaviour
         {
             _itemStack.Push(item);
         }
+
+        if (ObjPositionManager.Instance == null) return;
+        ObjPositionManager.Instance.AddItemPosition(gameObject.transform);
     }
 
     public void PushItem(Item item)
@@ -36,7 +39,6 @@ public class ItemPile : MonoBehaviour
             Item item = _itemStack.Pop();
 
             item.gameObject.transform.SetParent(null);
-            Debug.Log(_itemStack.Count);
             return item;
         }
         return null;
@@ -59,7 +61,7 @@ public class ItemPile : MonoBehaviour
     {
         if (_itemStack.Count > 1)        //아이템이 있을때
         {
-            item.gameObject.transform.localPosition = new Vector3(0, _itemStack.Count * item._itemSO._additionalCarryPos.y, 0);
+            item.gameObject.transform.localPosition = new Vector3(0, _itemStack.Count * item._itemSO._onGroundAdditionalPos.y, 0);
         }
         else
         {

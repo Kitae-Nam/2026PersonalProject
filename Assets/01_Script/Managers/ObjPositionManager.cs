@@ -3,36 +3,71 @@ using UnityEngine;
 
 public class ObjPositionManager : MonoSingleton<ObjPositionManager>
 {
-    private List<Vector3> _objPositions = new List<Vector3>();
+    public List<Transform> _itemObjPosition = new List<Transform>();
+    public List<Transform> _harvestableObjPosition = new List<Transform>();
 
-    public void AddObjPosition(Vector3 position)
+    public void AddItemPosition(Transform position)
     {
-        _objPositions.Add(position);
+        _itemObjPosition.Add(position);
     }
-    public Vector3 GetNearestObjPosition(Vector3 position, float radius)
+    public void AddHavaObjPosition(Transform position)
     {
+        _harvestableObjPosition.Add(position);
+    }
+    public Transform GetNearestItemPosition(Vector3 position, float radius)
+    {
+        _itemObjPosition.RemoveAll(t => t == null);
+
         float nearestDistance = float.MaxValue;
-        Vector3 nearestone = Vector3.zero;
+        Transform nearestOne = null;
         bool isFound = false;
 
         float radiusSqr = radius * radius;
 
-        foreach (var obj in _objPositions)
+        foreach (var obj in _itemObjPosition)
         {
-            float distance = (obj - position).sqrMagnitude;
+            float distance = (obj.position - position).sqrMagnitude;
 
             if (distance <= radiusSqr)
             {
                 if (distance < nearestDistance)
                 {
                     nearestDistance = distance;
-                    nearestone = obj;
+                    nearestOne = obj;
                     isFound = true;
                 }
 
             }
         }
 
-        return isFound ? nearestone : Vector3.zero;
+        return isFound ? nearestOne : null;
+    }
+    public Transform GetNearestHavaPosition(Vector3 position, float radius)
+    {
+        _harvestableObjPosition.RemoveAll(t => t == null);
+
+        float nearestDistance = float.MaxValue;
+        Transform nearestOne = null;
+        bool isFound = false;
+
+        float radiusSqr = radius * radius;
+
+        foreach (var obj in _harvestableObjPosition)
+        {
+            float distance = (obj.position - position).sqrMagnitude;
+
+            if (distance <= radiusSqr)
+            {
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestOne = obj;
+                    isFound = true;
+                }
+
+            }
+        }
+
+        return isFound ? nearestOne : null;
     }
 }
