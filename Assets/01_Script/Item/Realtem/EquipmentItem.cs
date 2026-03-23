@@ -6,5 +6,5 @@ public abstract class EquipmentItem : Item
     public Vector3 _useOffset;
     [SerializeField] private LayerMask _havaLayer;
 
-    
+    public abstract void Use(GameObject harvestObj);
 }

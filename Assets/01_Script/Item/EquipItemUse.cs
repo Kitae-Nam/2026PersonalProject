@@ -1,6 +1,5 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class EquipItemUse : MonoBehaviour
 {
@@ -8,7 +7,7 @@ public class EquipItemUse : MonoBehaviour
     [SerializeField] private LayerMask _treeLayer;
     [SerializeField] private LayerMask _rockLayer;
     [SerializeField] private LayerMask _waterLayer;
-    [SerializeField] private Vector3 _useRange;
+    [SerializeField] private float _useRange;
     [SerializeField] private Vector3 _useOffset;
     [SerializeField] private float _useDelay = 1f;
 
@@ -29,12 +28,12 @@ public class EquipItemUse : MonoBehaviour
         {
             if (_carryItem.IsCarryItem == false) return;
 
-            if(_topItem == null)
-                _topItem = _carryItem.ItemStack.Peek()._itemSO;
+            _topItem = _carryItem.ItemStack.Peek()._itemSO;
+            if (_topItem == null) return;
 
             if (_topItem._itemType == ItemType.Equipment)
             {
-
+                EquipmentUse();
             }
             _timer = 0;
         }
@@ -42,12 +41,21 @@ public class EquipItemUse : MonoBehaviour
 
     private void EquipmentUse()
     {
-        
+        EquipmentItem equipItem = _topItem.GetComponent<EquipmentItem>();
+
+        Transform nearHarvest = ObjPositionManager.Instance.GetNearestHavaPosition(transform.position + _useOffset, _useRange);
+
+        GameObject harvestObj = nearHarvest.gameObject;
+
+        if (equipItem != null)
+        {
+            equipItem.Use(harvestObj);
+        }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + _useOffset, _useRange);
+        Gizmos.DrawWireSphere(transform.position + _useOffset, _useRange);
     }
 }
