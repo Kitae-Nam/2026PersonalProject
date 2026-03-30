@@ -11,12 +11,12 @@ public class PlayerInputHandle : MonoBehaviour
     {
         _playerInput.OnInteractionChange += _carryItem.HandleItemImput;
         _playerInput.OnMovementChange += _playerMove.HandleMoveInput;
-        _playerInput.OnInteractionChange += _equipItemUse.HandleInteractionInput;
+        _playerInput.OnAttackChange += _equipItemUse.HandleInteractionInput;
     }
     private void OnDestroy()
     {
         _playerInput.OnInteractionChange -= _carryItem.HandleItemImput;
         _playerInput.OnMovementChange -= _playerMove.HandleMoveInput;
-        _playerInput.OnInteractionChange -= _equipItemUse.HandleInteractionInput;
+        _playerInput.OnAttackChange -= _equipItemUse.HandleInteractionInput;
     }
 }

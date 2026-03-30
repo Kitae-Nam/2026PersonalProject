@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class ItemPile : MonoBehaviour
 {
-    public Stack<Item> _itemStack = new Stack<Item>();
-    public List<Item> _itemList;
+    public Stack<Item> itemStack = new Stack<Item>();
+    [SerializeField] private List<Item> _itemList;
 
-    public Item[] _toPushDirectlyItem;
-    public int count => _itemStack.Count;
+    [SerializeField] private Item[] _toPushDirectlyItem;
+    public int count => itemStack.Count;
 
     private void Awake()
     {
         foreach (var item in _itemList)
         {
-            _itemStack.Push(item);
+            itemStack.Push(item);
         }
 
         if (ObjPositionManager.Instance == null) return;
@@ -22,7 +22,7 @@ public class ItemPile : MonoBehaviour
 
     public void PushItem(Item item)
     {
-        _itemStack.Push(item);
+        itemStack.Push(item);
         _itemList.Add(item);
         item.gameObject.transform.SetParent(this.transform);
 
@@ -31,12 +31,12 @@ public class ItemPile : MonoBehaviour
 
     public Item PopItem()
     {
-        if (_itemStack.Count > 0)
+        if (itemStack.Count > 0)
         {
             int lastIndex = _itemList.Count - 1;
             _itemList.RemoveAt(lastIndex);
 
-            Item item = _itemStack.Pop();
+            Item item = itemStack.Pop();
 
             item.gameObject.transform.SetParent(null);
             return item;
@@ -53,19 +53,19 @@ public class ItemPile : MonoBehaviour
     [ContextMenu("CLear")]
     public void Clear()
     {
-        _itemStack.Clear();
+        itemStack.Clear();
         _itemList.Clear();
     }
 
     private void PositionEdit(Item item)
     {
-        if (_itemStack.Count > 1)        //아이템이 있을때
+        if (itemStack.Count > 1)        //아이템이 있을때
         {
-            item.gameObject.transform.localPosition = new Vector3(0, _itemStack.Count * item._itemSO._onGroundAdditionalPos.y, 0);
+            item.gameObject.transform.localPosition = new Vector3(0, itemStack.Count * item.itemSO.onGroundAdditionalPos.y, 0);
         }
         else
         {
-            item.gameObject.transform.localPosition = item._itemSO._onGroundPos;
+            item.gameObject.transform.localPosition = item.itemSO.onGroundPos;
         }
     }
 }

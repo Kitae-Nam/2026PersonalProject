@@ -45,9 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a858358aca20284d9d97911a25ddc1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemSO: {fileID: 11400000, guid: 4b9ef3c75bc0bf04bba423ab897c76ad, type: 2}
-  _useRange: 1
-  _useOffset: {x: 0, y: 0, z: 1}
+  itemSO: {fileID: 11400000, guid: 4b9ef3c75bc0bf04bba423ab897c76ad, type: 2}
   _havaLayer:
     serializedVersion: 2
     m_Bits: 512
