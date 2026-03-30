@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class HarvestableObject : MonoBehaviour
 {
     public HarvestableSO harvestableSO;
-    public int _currentHarvestCount;
+    public int currentHarvestCount;
 
     protected virtual void Awake()
     {
@@ -14,20 +14,20 @@ public abstract class HarvestableObject : MonoBehaviour
     }
     private void Start()
     {
-        _currentHarvestCount = harvestableSO._harvestCount;
+        currentHarvestCount = harvestableSO.harvestCount;
     }
     public virtual void Harvest()
     {
-        _currentHarvestCount--;
+        currentHarvestCount--;
         HarvestEffect();
 
-        if (_currentHarvestCount <= 0)
+        if (currentHarvestCount <= 0)
         {
             Debug.Log("채집 완료");
             HarvestDoneEffect();
-            if (harvestableSO._harvestedPrefab != null)
+            if (harvestableSO.harvestedPrefab != null)
             {
-                Instantiate(harvestableSO._harvestedPrefab, transform.position, Quaternion.identity);
+                Instantiate(harvestableSO.harvestedPrefab, transform.position, Quaternion.identity);
             }
             Destroy(gameObject);
         }

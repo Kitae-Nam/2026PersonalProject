@@ -2,5 +2,6 @@ using UnityEngine;
 
 public abstract class Item : MonoBehaviour
 {
-    public ItemSO _itemSO;
+    public ItemSO itemSO;
+    public GameObject itemGO => gameObject;
 }

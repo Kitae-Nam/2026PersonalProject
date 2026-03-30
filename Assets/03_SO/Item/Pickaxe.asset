@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca3aecf3a42dd24290cee35236b3f9b, type: 3}
   m_Name: Pickaxe
   m_EditorClassIdentifier: 
-  _itemType: 2
-  _equipmentType: 2
+  itemType: 2
+  materialType: 0
+  equipmentType: 2
+  itemCarryPos: {x: 0, y: 0, z: 0}
+  additionalCarryPos: {x: 0, y: 0, z: 0}
+  onGroundPos: {x: 0, y: 0, z: 0}
+  onGroundAdditionalPos: {x: 0, y: 0, z: 0}

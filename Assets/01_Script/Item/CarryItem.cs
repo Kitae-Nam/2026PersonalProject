@@ -14,8 +14,8 @@ public class CarryItem : MonoBehaviour
 
     private float _timer = 0f;
 
-    public int _canCarryItemCount = 3;
-    public int _currentCarryItemCount = 0;
+    [SerializeField] private int _canCarryItemCount = 3;
+    [SerializeField] private int _currentCarryItemCount = 0;
 
     private Stack<Item> _itemStack = new Stack<Item>();
 
@@ -25,7 +25,7 @@ public class CarryItem : MonoBehaviour
 
     public bool IsCarryItem { get { return _itemStack.Count > 0; } }
     public Stack<Item> ItemStack { get { return _itemStack; } }
-    private Tilemap _groundTile => GameManager.Instance._groundTile;
+    private Tilemap _groundTile => GameManager.Instance.groundTile;
 
     private void Update()
     {
@@ -40,7 +40,7 @@ public class CarryItem : MonoBehaviour
         {
             if (collision.TryGetComponent<ItemPile>(out ItemPile itemPile))
             {
-                if (itemPile._itemStack.Count == 0) return;
+                if (itemPile.itemStack.Count == 0) return;
 
                 if (CanPileOn(itemPile))
                 {
@@ -123,7 +123,7 @@ public class CarryItem : MonoBehaviour
             dropPos.y = 1;
 
             ItemPile newItemPile = Instantiate(_itemPilePrefab, dropPos, Quaternion.identity);
-            newItemPile.transform.SetParent(GameManager.Instance._ItemPileParent);
+            newItemPile.transform.SetParent(GameManager.Instance.ItemPileParent);
             foreach (var item in _itemStack)
             {
                 newItemPile.PushItem(item);
@@ -139,12 +139,12 @@ public class CarryItem : MonoBehaviour
 
     private bool CanPileOn(ItemPile pile)
     {
-        if (pile._itemStack.Count == 0) return true;
+        if (pile.itemStack.Count == 0) return true;
 
-        var topSO = pile._itemStack.Peek()._itemSO;
-        return topSO._itemType == _currentCarryItemType &&
-               topSO._materialType == _currentCarryMaterialType &&
-               topSO._equipmentType == _currentCarryEquipmentType;
+        var topSO = pile.itemStack.Peek().itemSO;
+        return topSO.itemType == _currentCarryItemType &&
+               topSO.materialType == _currentCarryMaterialType &&
+               topSO.equipmentType == _currentCarryEquipmentType;
     }
 
     private void TryPickUp(Item item)
@@ -161,11 +161,11 @@ public class CarryItem : MonoBehaviour
             Debug.Log("picked up first item");
             _itemStack.Push(item);
 
-            _currentCarryItemType = item._itemSO._itemType;
-            _currentCarryMaterialType = item._itemSO._materialType;
-            _currentCarryEquipmentType = item._itemSO._equipmentType;
+            _currentCarryItemType = item.itemSO.itemType;
+            _currentCarryMaterialType = item.itemSO.materialType;
+            _currentCarryEquipmentType = item.itemSO.equipmentType;
 
-            ItemPosEdit(item, item._itemSO._itemCarryPos);
+            ItemPosEdit(item, item.itemSO.itemCarryPos);
         }
         else
         {
@@ -173,7 +173,7 @@ public class CarryItem : MonoBehaviour
             _itemStack.Push(item);
 
             ItemPosEdit(item,
-                item._itemSO._additionalCarryPos * _currentCarryItemCount);
+                item.itemSO.additionalCarryPos * _currentCarryItemCount);
         }
     }
 

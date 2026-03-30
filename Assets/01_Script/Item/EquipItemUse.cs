@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EquipItemUse : MonoBehaviour
@@ -8,11 +7,11 @@ public class EquipItemUse : MonoBehaviour
     [SerializeField] private LayerMask _rockLayer;
     [SerializeField] private LayerMask _waterLayer;
     [SerializeField] private float _useRange;
-    [SerializeField] private Vector3 _useOffset;
+    [SerializeField] private GameObject _useOffset;
     [SerializeField] private float _useDelay = 1f;
 
     private float _timer = 0f;
-    private ItemSO _topItem;
+    private Item _topItem;
 
     private void Awake()
     {
@@ -26,12 +25,13 @@ public class EquipItemUse : MonoBehaviour
     {
         if (_timer >= _useDelay)
         {
+            Debug.Log("Interaction start");
             if (_carryItem.IsCarryItem == false) return;
 
-            _topItem = _carryItem.ItemStack.Peek()._itemSO;
+            _topItem = _carryItem.ItemStack.Peek();
             if (_topItem == null) return;
 
-            if (_topItem._itemType == ItemType.Equipment)
+            if (_topItem.itemSO.itemType == ItemType.Equipment)
             {
                 EquipmentUse();
             }
@@ -41,21 +41,46 @@ public class EquipItemUse : MonoBehaviour
 
     private void EquipmentUse()
     {
-        EquipmentItem equipItem = _topItem.GetComponent<EquipmentItem>();
+        EquipmentItem equipItem = _topItem.itemGO.GetComponent<EquipmentItem>();
+        Transform nearHarvest = ObjPositionManager.Instance.GetNearestHavaPosition(_useOffset.transform.position, _useRange);
 
-        Transform nearHarvest = ObjPositionManager.Instance.GetNearestHavaPosition(transform.position + _useOffset, _useRange);
-
-        GameObject harvestObj = nearHarvest.gameObject;
-
+        if (nearHarvest == null || equipItem == null)
+        {
+            Debug.Log(nearHarvest == null);
+            Debug.Log(equipItem == null);
+            return;
+        }
+        //해당 장비가 획득 가능한 재료인지 확인
         if (equipItem != null)
         {
-            equipItem.Use(harvestObj);
+            if (GetHavaLayer(equipItem) == nearHarvest.gameObject.layer)
+            {
+                GameObject harvestObj = nearHarvest.gameObject;
+                equipItem.Use(harvestObj);
+            }
         }
     }
 
+    private LayerMask GetHavaLayer(EquipmentItem equipment)
+    {
+        LayerMask layerMask = 0;
+        switch (equipment.itemSO.equipmentType)
+        {
+            case EquipmentType.Pickaxe:
+                layerMask = _rockLayer;
+                break;
+            case EquipmentType.Axe:
+                layerMask = _treeLayer;
+                break;
+            case EquipmentType.Bucket:
+                layerMask = _waterLayer;
+                break;
+        }
+        return layerMask;
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position + _useOffset, _useRange);
+        Gizmos.DrawWireSphere(_useOffset.transform.position, _useRange);
     }
 }
