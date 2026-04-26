@@ -44,7 +44,7 @@ public class PoolManager : MonoSingleton<PoolManager>
                 }
                 else
                 {
-                    Debug.Assert(false, $"PoolManager: Pop - {name} is empty.");
+                    
                     return null;
                 }
             }
