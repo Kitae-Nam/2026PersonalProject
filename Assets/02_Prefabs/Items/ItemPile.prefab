@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2704604089103476842}
   - component: {fileID: 1441911461169076048}
   - component: {fileID: 8655051281490582425}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: ItemPile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bfad16bb9f6421409b27391808d6d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemList: []
   _toPushDirectlyItem: []
 --- !u!65 &8655051281490582425
 BoxCollider:

@@ -8,15 +8,15 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - Item
-  - EquipItem
-  - Tree
-  - Rock
+  - Ground
+  - Item & EquipItem
+  - Tree & Rock
   - ItemPile
-  - 
+  - Rail
+  - Wood & Stone
   - 
   - 
   - 
