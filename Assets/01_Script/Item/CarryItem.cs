@@ -103,6 +103,7 @@ public class CarryItem : MonoBehaviour
                 {
                     foreach (var item in _itemStack)
                     {
+                        item.transform.rotation = Quaternion.identity;
                         itemDummy.PushItem(item);
                         Debug.Log("piled up");
                     }
@@ -126,6 +127,7 @@ public class CarryItem : MonoBehaviour
             newItemPile.transform.SetParent(GameManager.Instance.ItemPileParent);
             foreach (var item in _itemStack)
             {
+                item.transform.rotation = Quaternion.identity;
                 newItemPile.PushItem(item);
             }
             _currentCarryItemCount = 0;
@@ -149,9 +151,7 @@ public class CarryItem : MonoBehaviour
 
     private void TryPickUp(Item item)
     {
-        if (_itemStack.Contains(item) == true)
-            return;
-        if (_currentCarryItemCount >= _canCarryItemCount)
+        if (_itemStack.Contains(item) == true || _currentCarryItemCount >= _canCarryItemCount || item.isCanCarry == false)
             return;
 
         _currentCarryItemCount++;
