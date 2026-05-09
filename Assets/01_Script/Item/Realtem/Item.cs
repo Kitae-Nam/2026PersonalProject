@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public abstract class Item : MonoBehaviour
+namespace _01_Script.Item.Realtem
 {
-    public ItemSO itemSO;
-    public GameObject itemGO => gameObject;
-    public bool isCanCarry { get; protected set; } = true;
+    public abstract class Item : MonoBehaviour
+    {
+        public ItemSO itemSo;
+        public GameObject itemGo => gameObject;
+        public bool isCanCarry { get; protected set; } = true;
+    }
 }

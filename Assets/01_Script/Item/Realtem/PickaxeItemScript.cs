@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class PickaxeItemScript : EquipmentItem
+namespace _01_Script.Item.Realtem
 {
-    public override void Use(GameObject harvestObj)
+    public class PickaxeItemScript : EquipmentItem
     {
-        if (harvestObj.TryGetComponent<HarvestableObject>(out HarvestableObject havaCompo))
+        public override void Use(GameObject harvestObj)
         {
-            havaCompo.Harvest();
+            if (harvestObj.TryGetComponent<HarvestableObject.HarvestableObject>(out HarvestableObject.HarvestableObject havaCompo))
+            {
+                havaCompo.Harvest();
+            }
         }
     }
 }

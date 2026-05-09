@@ -11158,7 +11158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 867428897857691373, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 867428897857691373, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -41641,7 +41641,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 867428897857691373, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 867428897857691373, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -51160,7 +51160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3387302511317601543, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: railMask.m_Bits
-      value: 3072
+      value: 1024
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -62113,6 +62113,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: _rockLayer.m_Bits
+      value: 4096
+      objectReference: {fileID: 0}
     - target: {fileID: 6668653652354059505, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
       propertyPath: m_Name
       value: Player
@@ -62156,6 +62160,10 @@ PrefabInstance:
     - target: {fileID: 8178535865196915241, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919776824776038572, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: _itemPileLayers.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -62497,6 +62505,10 @@ PrefabInstance:
     - target: {fileID: 3382159159981507511, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_Name
       value: ItemPile (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387302511317601543, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+      propertyPath: railMask.m_Bits
+      value: 1024
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

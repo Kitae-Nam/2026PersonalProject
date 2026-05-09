@@ -2,49 +2,52 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[CreateAssetMenu(fileName = "PlayerInputSO", menuName = "SO/PlayerInputSO")]
-public class PlayerInputSO : ScriptableObject, Controls.IPlayerActions
+namespace _01_Script.Player
 {
-    public event Action<Vector2> OnMovementChange;
-    public event Action OnAttackChange;
-    public event Action OnInteractionChange;
-
-    private Controls controls;
-
-    private void OnEnable()
+    [CreateAssetMenu(fileName = "PlayerInputSO", menuName = "SO/PlayerInputSO")]
+    public class PlayerInputSO : ScriptableObject, Controls.IPlayerActions
     {
-        if(controls == null)
+        public event Action<Vector2> OnMovementChange;
+        public event Action OnAttackChange;
+        public event Action OnInteractionChange;
+
+        private Controls controls;
+
+        private void OnEnable()
         {
-            controls = new Controls();
-            controls.Player.SetCallbacks(this);
+            if(controls == null)
+            {
+                controls = new Controls();
+                controls.Player.SetCallbacks(this);
+            }
+            controls.Player.Enable();
         }
-        controls.Player.Enable();
-    }
 
-    private void OnDisable()
-    {
-        controls.Player.Disable();
-    }
-
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-        if(context.performed)
+        private void OnDisable()
         {
-            OnAttackChange?.Invoke();
+            controls.Player.Disable();
         }
-    }
 
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        Vector2 movement = context.ReadValue<Vector2>();
-        OnMovementChange?.Invoke(movement);
-    }
-
-    public void OnInteraction(InputAction.CallbackContext context)
-    {
-        if(context.started)
+        public void OnAttack(InputAction.CallbackContext context)
         {
-            OnInteractionChange?.Invoke();
+            if(context.performed)
+            {
+                OnAttackChange?.Invoke();
+            }
+        }
+
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            Vector2 movement = context.ReadValue<Vector2>();
+            OnMovementChange?.Invoke(movement);
+        }
+
+        public void OnInteraction(InputAction.CallbackContext context)
+        {
+            if(context.started)
+            {
+                OnInteractionChange?.Invoke();
+            }
         }
     }
 }
