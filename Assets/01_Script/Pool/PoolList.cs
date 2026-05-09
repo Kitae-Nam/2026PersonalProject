@@ -1,8 +1,11 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PoolList", menuName = "SO/Pool/PoolList")]
-public class PoolList : ScriptableObject
+namespace _01_Script.Pool
 {
-    public Pool[] pools;
+    [CreateAssetMenu(fileName = "PoolList", menuName = "SO/Pool/PoolList")]
+    public class PoolList : ScriptableObject
+    {
+        public Pool[] pools;
 
+    }
 }

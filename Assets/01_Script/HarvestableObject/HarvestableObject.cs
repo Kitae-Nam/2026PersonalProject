@@ -1,41 +1,44 @@
-using Unity.IO.LowLevel.Unsafe;
+using _01_Script.Managers;
 using UnityEngine;
 
-public abstract class HarvestableObject : MonoBehaviour
+namespace _01_Script.HarvestableObject
 {
-    public HarvestableSO harvestableSO;
-    public int currentHarvestCount;
-
-    protected virtual void Awake()
+    public abstract class HarvestableObject : MonoBehaviour
     {
-        if (ObjPositionManager.Instance == null) return;
+        public HarvestableSo harvestableSo;
+        public int currentHarvestCount;
 
-        ObjPositionManager.Instance.AddHavaObjPosition(this.transform);
-    }
-    private void Start()
-    {
-        currentHarvestCount = harvestableSO.harvestCount;
-    }
-    public virtual void Harvest()
-    {
-        currentHarvestCount--;
-        HarvestEffect();
-
-        if (currentHarvestCount <= 0)
+        protected virtual void Awake()
         {
-            Debug.Log("Ã¤Áý ¿Ï·á");
-            HarvestDoneEffect();
-            if (harvestableSO.harvestedPrefab != null)
-            {
-                Instantiate(harvestableSO.harvestedPrefab, transform.position, Quaternion.identity);
-            }
-            Destroy(gameObject);
+            if (ObjPositionManager.Instance == null) return;
+
+            ObjPositionManager.Instance.AddHavaObjPosition(this.transform);
         }
-    }
-    public virtual void HarvestEffect()
-    {
-    }
-    public virtual void HarvestDoneEffect()
-    {
+        private void Start()
+        {
+            currentHarvestCount = harvestableSo.harvestCount;
+        }
+        public virtual void Harvest()
+        {
+            currentHarvestCount--;
+            HarvestEffect();
+
+            if (currentHarvestCount <= 0)
+            {
+                Debug.Log("Ã¤ï¿½ï¿½ ï¿½Ï·ï¿½");
+                HarvestDoneEffect();
+                if (harvestableSo.harvestedPrefab != null)
+                {
+                    Instantiate(harvestableSo.harvestedPrefab, transform.position, Quaternion.identity);
+                }
+                Destroy(gameObject);
+            }
+        }
+        public virtual void HarvestEffect()
+        {
+        }
+        public virtual void HarvestDoneEffect()
+        {
+        }
     }
 }

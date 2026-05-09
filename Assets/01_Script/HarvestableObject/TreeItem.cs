@@ -1,6 +1,7 @@
-using UnityEngine;
-
-public class TreeItem : HarvestableObject
+namespace _01_Script.HarvestableObject
 {
+    public class TreeItem : HarvestableObject
+    {
     
+    }
 }

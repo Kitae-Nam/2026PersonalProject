@@ -51,7 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3559cde5945e9bc4289728d406199045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSO: {fileID: 11400000, guid: 62b94794b8c99cd4e82374fae00062a7, type: 2}
+  itemSo: {fileID: 11400000, guid: 62b94794b8c99cd4e82374fae00062a7, type: 2}
+  eventSo: {fileID: 0}
   railArr:
   - {fileID: 2720605651300419379}
   - {fileID: 7488117509620881125}
@@ -62,7 +63,7 @@ MonoBehaviour:
   maxDistance: 1.8
   railMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 1024
   _isUpate: 1
 --- !u!65 &1796301480702530251
 BoxCollider:

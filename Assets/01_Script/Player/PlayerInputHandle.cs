@@ -1,22 +1,26 @@
+using _01_Script.Item;
 using UnityEngine;
 
-public class PlayerInputHandle : MonoBehaviour
+namespace _01_Script.Player
 {
-    [SerializeField] private PlayerInputSO _playerInput;
-    [SerializeField] private CarryItem _carryItem;
-    [SerializeField] private PlayerMove _playerMove;
-    [SerializeField] private EquipItemUse _equipItemUse;
+    public class PlayerInputHandle : MonoBehaviour
+    {
+        [SerializeField] private PlayerInputSO _playerInput;
+        [SerializeField] private CarryItem _carryItem;
+        [SerializeField] private PlayerMove _playerMove;
+        [SerializeField] private EquipItemUse _equipItemUse;
 
-    private void Awake()
-    {
-        _playerInput.OnInteractionChange += _carryItem.HandleItemImput;
-        _playerInput.OnMovementChange += _playerMove.HandleMoveInput;
-        _playerInput.OnAttackChange += _equipItemUse.HandleInteractionInput;
-    }
-    private void OnDestroy()
-    {
-        _playerInput.OnInteractionChange -= _carryItem.HandleItemImput;
-        _playerInput.OnMovementChange -= _playerMove.HandleMoveInput;
-        _playerInput.OnAttackChange -= _equipItemUse.HandleInteractionInput;
+        private void Awake()
+        {
+            _playerInput.OnInteractionChange += _carryItem.HandleItemImput;
+            _playerInput.OnMovementChange += _playerMove.HandleMoveInput;
+            _playerInput.OnAttackChange += _equipItemUse.HandleInteractionInput;
+        }
+        private void OnDestroy()
+        {
+            _playerInput.OnInteractionChange -= _carryItem.HandleItemImput;
+            _playerInput.OnMovementChange -= _playerMove.HandleMoveInput;
+            _playerInput.OnAttackChange -= _equipItemUse.HandleInteractionInput;
+        }
     }
 }
