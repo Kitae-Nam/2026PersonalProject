@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _01_Script.Item.Realtem
 {
-    public abstract class EquipmentItem : Item
+    public abstract class EquipmentItemParent : ItemParent
     {
         [SerializeField] private LayerMask havaLayer;
 

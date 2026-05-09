@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _01_Script.Item.Realtem
 {
-    public class PickaxeItemScript : EquipmentItem
+    public class PickaxeItemParentScript : EquipmentItemParent
     {
         public override void Use(GameObject harvestObj)
         {
@@ -10,6 +10,16 @@ namespace _01_Script.Item.Realtem
             {
                 havaCompo.Harvest();
             }
+        }
+
+        public override void CarredItem()
+        {
+            
+        }
+
+        public override void DropedItem()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

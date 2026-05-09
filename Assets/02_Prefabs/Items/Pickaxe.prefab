@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a858358aca20284d9d97911a25ddc1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSO: {fileID: 11400000, guid: 4b9ef3c75bc0bf04bba423ab897c76ad, type: 2}
-  _havaLayer:
+  itemSo: {fileID: 11400000, guid: 4b9ef3c75bc0bf04bba423ab897c76ad, type: 2}
+  havaLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 4096
 --- !u!1001 &1090142030406526247
 PrefabInstance:
   m_ObjectHideFlags: 0

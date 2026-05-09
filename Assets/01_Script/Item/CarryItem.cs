@@ -20,14 +20,14 @@ namespace _01_Script.Item
         [SerializeField] private int _canCarryItemCount = 3;
         [SerializeField] private int _currentCarryItemCount = 0;
 
-        private Stack<Realtem.Item> _itemStack = new Stack<Realtem.Item>();
+        private Stack<Realtem.ItemParent> _itemStack = new Stack<Realtem.ItemParent>();
 
         private ItemType _currentCarryItemType = ItemType.None;
         private MaterialType _currentCarryMaterialType = MaterialType.None;
         private EquipmentType _currentCarryEquipmentType = EquipmentType.None;
 
         public bool IsCarryItem { get { return _itemStack.Count > 0; } }
-        public Stack<Realtem.Item> ItemStack { get { return _itemStack; } }
+        public Stack<Realtem.ItemParent> ItemStack { get { return _itemStack; } }
         private Tilemap _groundTile => GameManager.Instance.groundTile;
 
         private void Update()
@@ -47,8 +47,8 @@ namespace _01_Script.Item
 
                     if (CanPileOn(itemPile))
                     {
-                        Realtem.Item topItem = itemPile.PopItem();
-                        TryPickUp(topItem);
+                        Realtem.ItemParent topItemParent = itemPile.PopItem();
+                        TryPickUp(topItemParent);
                     }
                 }
             }
@@ -80,11 +80,11 @@ namespace _01_Script.Item
             {
                 if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
                 {
-                    Realtem.Item itemFromPile = itemDummy.PopItem();
-                    if (itemFromPile != null)
+                    Realtem.ItemParent itemParentFromPile = itemDummy.PopItem();
+                    if (itemParentFromPile != null)
                     {
                         Debug.Log("picked up");
-                        TryPickUp(itemFromPile);
+                        TryPickUp(itemParentFromPile);
                     }
                 }
             }
@@ -108,10 +108,12 @@ namespace _01_Script.Item
                         {
                             item.transform.rotation = Quaternion.identity;
                             itemDummy.PushItem(item);
+                            item.DropedItem();
                             Debug.Log("piled up");
                         }
                         _currentCarryItemCount = 0;
                         _itemStack.Clear();
+                        
                         return;
                     }
                     else
@@ -132,6 +134,7 @@ namespace _01_Script.Item
                 {
                     item.transform.rotation = Quaternion.identity;
                     newItemPile.PushItem(item);
+                    item.DropedItem();
                 }
                 _currentCarryItemCount = 0;
                 _itemStack.Clear();
@@ -152,9 +155,9 @@ namespace _01_Script.Item
                    topSO.equipmentType == _currentCarryEquipmentType;
         }
 
-        private void TryPickUp(Realtem.Item item)
+        private void TryPickUp(Realtem.ItemParent itemParent)
         {
-            if (_itemStack.Contains(item) == true || _currentCarryItemCount >= _canCarryItemCount || item.isCanCarry == false)
+            if (_itemStack.Contains(itemParent) == true || _currentCarryItemCount >= _canCarryItemCount || itemParent.isCanCarry == false)
                 return;
 
             _currentCarryItemCount++;
@@ -162,29 +165,29 @@ namespace _01_Script.Item
             if (_currentCarryItemCount <= 1)
             {
                 Debug.Log("picked up first item");
-                _itemStack.Push(item);
+                _itemStack.Push(itemParent);
 
-                _currentCarryItemType = item.itemSo.itemType;
-                _currentCarryMaterialType = item.itemSo.materialType;
-                _currentCarryEquipmentType = item.itemSo.equipmentType;
+                _currentCarryItemType = itemParent.itemSo.itemType;
+                _currentCarryMaterialType = itemParent.itemSo.materialType;
+                _currentCarryEquipmentType = itemParent.itemSo.equipmentType;
 
-                ItemPosEdit(item, item.itemSo.itemCarryPos);
+                ItemPosEdit(itemParent, itemParent.itemSo.itemCarryPos);
             }
             else
             {
                 Debug.Log("picked");
-                _itemStack.Push(item);
+                _itemStack.Push(itemParent);
 
-                ItemPosEdit(item,
-                    item.itemSo.additionalCarryPos * _currentCarryItemCount);
+                ItemPosEdit(itemParent,
+                    itemParent.itemSo.additionalCarryPos * _currentCarryItemCount);
             }
         }
 
-        private void ItemPosEdit(Realtem.Item item, Vector3 pos)
+        private void ItemPosEdit(Realtem.ItemParent itemParent, Vector3 pos)
         {
-            item.transform.SetParent(_itemCarryParent);
-            item.transform.localPosition = pos;
-            item.transform.localRotation = Quaternion.identity;
+            itemParent.transform.SetParent(_itemCarryParent);
+            itemParent.transform.localPosition = pos;
+            itemParent.transform.localRotation = Quaternion.identity;
         }
 
         private void OnDrawGizmos()

@@ -11192,6 +11192,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemPile (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8698644900348918815, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+      propertyPath: m_Name
+      value: Rail1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -41675,6 +41679,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemPile (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8698644900348918815, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+      propertyPath: m_Name
+      value: Rail2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -51162,6 +51170,10 @@ PrefabInstance:
       propertyPath: railMask.m_Bits
       value: 1024
       objectReference: {fileID: 0}
+    - target: {fileID: 8698644900348918815, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+      propertyPath: m_Name
+      value: Rail3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -58924,6 +58936,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!1 &2016437823 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6626976814145623545, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+  m_PrefabInstance: {fileID: 4259422386166834355}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2017118532
 GameObject:
   m_ObjectHideFlags: 0
@@ -62114,8 +62131,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: useRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: useOffset
+      value: 
+      objectReference: {fileID: 2016437823}
+    - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: rockLayer.m_Bits
+      value: 4096
+      objectReference: {fileID: 0}
+    - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: treeLayer.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
       propertyPath: _rockLayer.m_Bits
       value: 4096
+      objectReference: {fileID: 0}
+    - target: {fileID: 26355365372214024, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: waterLayer.m_Bits
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 6668653652354059505, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
       propertyPath: m_Name
@@ -62320,6 +62357,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4317236550369972179}
     m_Modifications:
+    - target: {fileID: 3525420332478567663, guid: 42e1b28bf616dd34486fee6773487700, type: 3}
+      propertyPath: itemSo
+      value: 
+      objectReference: {fileID: 11400000, guid: 679b040beac584b4eb7753f4381b31f9, type: 2}
     - target: {fileID: 8375721932344951212, guid: 42e1b28bf616dd34486fee6773487700, type: 3}
       propertyPath: m_Name
       value: apple.vox
