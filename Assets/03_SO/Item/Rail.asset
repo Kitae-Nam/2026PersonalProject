@@ -15,7 +15,7 @@ MonoBehaviour:
   itemType: 0
   materialType: 0
   equipmentType: 0
-  itemCarryPos: {x: 0, y: 0, z: 0}
-  additionalCarryPos: {x: 0, y: 0, z: 0}
+  itemCarryPos: {x: 0, y: 1, z: 0}
+  additionalCarryPos: {x: 0, y: 0.25, z: 0}
   onGroundPos: {x: 0, y: -1, z: 0}
-  onGroundAdditionalPos: {x: 0, y: -0.35, z: 0}
+  onGroundAdditionalPos: {x: 0, y: 0.25, z: 0}
