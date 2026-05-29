@@ -25,7 +25,7 @@ namespace _01_Script.HarvestableObject
 
             if (currentHarvestCount <= 0)
             {
-                Debug.Log("ä�� �Ϸ�");
+                Debugging.Log("채집됨");
                 HarvestDoneEffect();
                 if (harvestableSo.harvestedPrefab != null)
                 {

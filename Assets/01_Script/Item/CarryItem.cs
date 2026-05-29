@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using _01_Script.Item.Realtem;
 using _01_Script.Managers;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
 namespace _01_Script.Item
@@ -20,35 +24,41 @@ namespace _01_Script.Item
         [SerializeField] private int _canCarryItemCount = 3;
         [SerializeField] private int _currentCarryItemCount = 0;
 
-        private Stack<Realtem.ItemParent> _itemStack = new Stack<Realtem.ItemParent>();
+        private Stack<ItemParent> _itemStack = new Stack<ItemParent>();
 
         private ItemType _currentCarryItemType = ItemType.None;
         private MaterialType _currentCarryMaterialType = MaterialType.None;
         private EquipmentType _currentCarryEquipmentType = EquipmentType.None;
 
         public bool IsCarryItem { get { return _itemStack.Count > 0; } }
-        public Stack<Realtem.ItemParent> ItemStack { get { return _itemStack; } }
+        public Stack<ItemParent> ItemStack { get { return _itemStack; } }
         private Tilemap _groundTile => GameManager.Instance.groundTile;
-
+        
         private void Update()
         {
             _timer += Time.deltaTime;
         }
+
         private void OnTriggerEnter(Collider collision)
         {
             if (_canCarryItemCount <= _currentCarryItemCount) return;
 
             bool isItemPileLayer = (_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0;
+            Debugging.Log(isItemPileLayer);
             if (isItemPileLayer && IsCarryItem)
             {
-                if (collision.TryGetComponent<ItemPile>(out ItemPile itemPile))
+                if (collision.gameObject.TryGetComponent<ItemPile>(out ItemPile itemPile))
                 {
                     if (itemPile.itemStack.Count == 0) return;
 
                     if (CanPileOn(itemPile))
                     {
-                        Realtem.ItemParent topItemParent = itemPile.PopItem();
-                        TryPickUp(topItemParent);
+                        ItemParent[] topItemParent = itemPile.PopAllItem(_canCarryItemCount - _currentCarryItemCount);
+                        foreach (var item in topItemParent)
+                        {
+                            if(item == null) continue;
+                            TryPickUp(item);
+                        }
                     }
                 }
             }
@@ -60,12 +70,10 @@ namespace _01_Script.Item
             {
                 if (IsCarryItem == false)
                 {
-                    Debug.Log("start");
                     ItemPickUpProcess();
                 }
                 else
                 {
-                    Debug.Log("drop");
                     ItemDropProcess();
                 }
                 _timer = 0f;
@@ -80,17 +88,16 @@ namespace _01_Script.Item
             {
                 if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
                 {
-                    Realtem.ItemParent itemParentFromPile = itemDummy.PopItem();
+                    ItemParent itemParentFromPile = itemDummy.PopItem();
                     if (itemParentFromPile != null)
                     {
-                        Debug.Log("picked up");
                         TryPickUp(itemParentFromPile);
                     }
                 }
             }
             else
             {
-                Debug.Log("itempile null");
+                Debugging.Log("itempile null");
             }
         }
 
@@ -109,15 +116,10 @@ namespace _01_Script.Item
                             item.transform.rotation = Quaternion.identity;
                             itemDummy.PushItem(item);
                             item.DropedItem();
-                            Debug.Log("piled up");
                         }
                         _currentCarryItemCount = 0;
                         _itemStack.Clear();
                         
-                        return;
-                    }
-                    else
-                    {
                         return;
                     }
                 }
@@ -138,7 +140,6 @@ namespace _01_Script.Item
                 }
                 _currentCarryItemCount = 0;
                 _itemStack.Clear();
-                Debug.Log("dropped");
             }
             _currentCarryItemType = ItemType.None;
             _currentCarryMaterialType = MaterialType.None;
@@ -155,7 +156,7 @@ namespace _01_Script.Item
                    topSO.equipmentType == _currentCarryEquipmentType;
         }
 
-        private void TryPickUp(Realtem.ItemParent itemParent)
+        private void TryPickUp(ItemParent itemParent)
         {
             if (_itemStack.Contains(itemParent) == true || _currentCarryItemCount >= _canCarryItemCount || itemParent.isCanCarry == false)
                 return;
@@ -164,7 +165,6 @@ namespace _01_Script.Item
 
             if (_currentCarryItemCount <= 1)
             {
-                Debug.Log("picked up first item");
                 _itemStack.Push(itemParent);
 
                 _currentCarryItemType = itemParent.itemSo.itemType;
@@ -175,15 +175,14 @@ namespace _01_Script.Item
             }
             else
             {
-                Debug.Log("picked");
                 _itemStack.Push(itemParent);
 
-                ItemPosEdit(itemParent,
-                    itemParent.itemSo.additionalCarryPos * _currentCarryItemCount);
+                ItemPosEdit(itemParent, itemParent.itemSo.itemCarryPos +
+                    itemParent.itemSo.additionalCarryPos * (_currentCarryItemCount - 1));
             }
         }
 
-        private void ItemPosEdit(Realtem.ItemParent itemParent, Vector3 pos)
+        private void ItemPosEdit(ItemParent itemParent, Vector3 pos)
         {
             itemParent.transform.SetParent(_itemCarryParent);
             itemParent.transform.localPosition = pos;
