@@ -12,10 +12,15 @@ namespace _01_Script.Train
         [Inject] private RailManager _railManager;
         [SerializeField] private float speed = 5f;
         [SerializeField] private float rotateSpeed = 5f;
+        [SerializeField] private float rotatePoint = 0.25f;
         
         private int _currentRailIndex;
         private bool _canMove = false;
         private Vector3 _nextPosition;
+        private Vector3 _nextNextPosition;
+        private Vector3 _currentPosition;
+        private Vector3 _dirIn;
+        private Vector3 _dirOut;
         private float _posY;
 
         private void Start()
@@ -38,26 +43,54 @@ namespace _01_Script.Train
             //dotoween으로 하기엔 속도 조절이 어려움
             if (_canMove == false) return;
             if (_railManager.GetNextRail(_currentRailIndex) == -1) return;
-            
-            _nextPosition = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex)].transform.position;
-            _nextPosition.y = _posY;
 
-            Vector3 dir =  _nextPosition - transform.position;
-            if (dir != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(dir);
-                transform.DORotateQuaternion(targetRotation, rotateSpeed * Time.deltaTime);
-            }
+            var target = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex)];
+            var nextTarget = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex + 1)];
+            bool isTurning = false;
+
+            _currentPosition = transform.position;
+            _nextPosition = target.transform.position;
+            _nextPosition.y = _posY;
+            _nextNextPosition = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex + 1)].transform.position;
+
+            _dirIn = (_nextPosition - _currentPosition).normalized;
+            _dirOut = (nextTarget.transform.position - target.transform.position).normalized;
             
-            transform.DOMove(_nextPosition, speed)
-                .SetSpeedBased()
-                .SetEase(Ease.Linear)
-                .OnComplete(() =>
+            isTurning = Vector3.Angle(_dirIn, _dirOut) > 5f;
+            
+            if (!isTurning)//돌아가는게 아닐때
+            {
+                Debug.Log("직선");
+                transform.DOMove(target.transform.position, speed)
+                    .SetSpeedBased(true)
+                    .SetEase(Ease.Linear)
+                    .OnComplete(() =>
+                    {
+                        _currentRailIndex++;
+                        TrainMoveStart();
+                    });
+            }
+            else
+            {
+                Debug.Log("곡선");
+                Vector3 pIn = target.transform.position - _dirIn * rotatePoint;
+                Vector3 pOut = target.transform.position + _dirOut * rotatePoint;
+                Vector3 pMid = (pIn + pOut) * 0.5f;
+                Vector3[] arc =
                 {
-                    transform.DOKill();
-                    _currentRailIndex++;
-                    TrainMoveStart();
-                });
+                    pIn,
+                    pOut,
+                };
+                transform.DOPath(arc, speed, PathType.CatmullRom)
+                    .SetSpeedBased(true)
+                    .SetEase(Ease.Linear)
+                    .SetLookAt(0.01f)
+                    .OnComplete(() =>
+                    {
+                        _currentRailIndex++;
+                        TrainMoveStart();
+                    });
+            }
         }
     }
 }
