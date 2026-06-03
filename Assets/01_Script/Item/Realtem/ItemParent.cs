@@ -6,7 +6,7 @@ namespace _01_Script.Item.Realtem
     {
         public ItemSO itemSo;
         public GameObject itemGo => gameObject;
-        public bool isCanCarry { get; protected set; } = true;
+        [field:SerializeField] public bool isCanCarry { get; protected set; } = true;
         public abstract void CarredItem();
         public abstract void DropedItem();
     }

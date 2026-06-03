@@ -44,7 +44,6 @@ namespace _01_Script.Item
             if (_canCarryItemCount <= _currentCarryItemCount) return;
 
             bool isItemPileLayer = (_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0;
-            Debugging.Log(isItemPileLayer);
             if (isItemPileLayer && IsCarryItem)
             {
                 if (collision.gameObject.TryGetComponent<ItemPile>(out ItemPile itemPile))
@@ -92,6 +91,7 @@ namespace _01_Script.Item
                     if (itemParentFromPile != null)
                     {
                         TryPickUp(itemParentFromPile);
+                        itemParentFromPile.CarredItem();
                     }
                 }
             }
