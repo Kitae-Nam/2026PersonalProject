@@ -13,6 +13,10 @@ PrefabInstance:
       value: LogItemPile
       objectReference: {fileID: 0}
     - target: {fileID: 1441911461169076048, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
+      propertyPath: canStack
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441911461169076048, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: _itemList.Array.size
       value: 1
       objectReference: {fileID: 0}

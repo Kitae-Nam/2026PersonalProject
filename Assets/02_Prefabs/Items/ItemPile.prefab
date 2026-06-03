@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemList: []
   _toPushDirectlyItem: []
+  canStack: 1
 --- !u!65 &8655051281490582425
 BoxCollider:
   m_ObjectHideFlags: 0

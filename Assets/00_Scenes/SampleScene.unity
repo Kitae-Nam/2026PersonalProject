@@ -64560,6 +64560,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 6902729057660461342, guid: d5ac6550b7c3d6d45b447144cb236dd4, type: 3}
+      propertyPath: canStack
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7944761243683167780, guid: d5ac6550b7c3d6d45b447144cb236dd4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.47000003

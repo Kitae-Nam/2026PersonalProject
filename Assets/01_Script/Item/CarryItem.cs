@@ -109,6 +109,7 @@ namespace _01_Script.Item
             {
                 if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
                 {
+                    if (itemDummy.canStack == false) return;
                     if (CanPileOn(itemDummy))
                     {
                         foreach (var item in _itemStack)

@@ -12,6 +12,7 @@ namespace _01_Script.Item
 
         [SerializeField] private ItemParent[] _toPushDirectlyItem;
         public int count => itemStack.Count;
+        public bool canStack = true;
 
         private void Awake()
         {
