@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MultiInteraction",
+                    "type": "Button",
+                    "id": "fb558802-95fc-433c-863f-08b253984ac1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -180,7 +189,7 @@
                 },
                 {
                     "name": "",
-                    "id": "a68ffa35-32a0-46cf-a542-44c2847a732d",
+                    "id": "09365acd-d139-4641-b2fc-f100a017c66a",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
@@ -188,6 +197,39 @@
                     "action": "Interaction",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "0ee4e5f9-c5af-4d1e-af15-d1c0bbb1b578",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MultiInteraction",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "21255f93-4f79-407a-9619-8eff4c8a8a2c",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MultiInteraction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "dee10d0b-991d-4041-ad0c-b14368968b68",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MultiInteraction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

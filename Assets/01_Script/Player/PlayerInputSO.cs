@@ -10,6 +10,7 @@ namespace _01_Script.Player
         public event Action<Vector2> OnMovementChange;
         public event Action OnAttackChange;
         public event Action OnInteractionChange;
+        public event Action OnInteractionCtrlChange;
 
         private Controls controls;
 
@@ -44,9 +45,18 @@ namespace _01_Script.Player
 
         public void OnInteraction(InputAction.CallbackContext context)
         {
+            if (Keyboard.current.shiftKey.isPressed) return; 
             if(context.started)
             {
                 OnInteractionChange?.Invoke();
+            }
+        }
+
+        public void OnMultiInteraction(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                OnInteractionCtrlChange?.Invoke();
             }
         }
     }

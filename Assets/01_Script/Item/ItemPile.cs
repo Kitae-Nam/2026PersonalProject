@@ -1,7 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace _01_Script.Item
 {
@@ -27,6 +30,7 @@ namespace _01_Script.Item
 
         public void PushItem(ItemParent itemParent)
         {
+            NullRemove();
             itemStack.Push(itemParent);
             _itemList.Add(itemParent);
             itemParent.gameObject.transform.SetParent(this.transform);
@@ -34,8 +38,10 @@ namespace _01_Script.Item
             PositionEdit(itemParent);
         }
 
+
         public ItemParent PopItem()
         {
+            NullRemove();
             if (itemStack.Count > 0)
             {
                 int lastIndex = _itemList.Count - 1;
@@ -51,20 +57,26 @@ namespace _01_Script.Item
 
         public ItemParent[] PopAllItem(int count)
         {
+            NullRemove();
+            if (count <= 0 || itemStack.Count == 0) return null;
             if (itemStack.Count > 0)
             {
-                ItemParent[] itemParents = new ItemParent[count];
-                for (int i = 0; i < itemStack.Count; i++)
+                int actualExtractCount = Mathf.Min(count, itemStack.Count);
+                
+                ItemParent[] itemParents = new ItemParent[actualExtractCount];
+                for (int i = 0; i < actualExtractCount; i++)
                 {
-                    if (count > i)
-                    {
-                        itemParents[i] = itemStack.Pop();
-                    }
+                    itemParents[i] = itemStack.Pop();
                 }
                 return itemParents;
             }
 
             return null;
+        }
+        private void NullRemove()
+        {
+            Stack<ItemParent> temp = new Stack<ItemParent>(itemStack.Where(x => x != null).Reverse());
+            itemStack = temp;
         }
 
         [ContextMenu("Directly Put")]
@@ -82,7 +94,7 @@ namespace _01_Script.Item
 
         private void PositionEdit(ItemParent itemParent)
         {
-            if (itemStack.Count > 1)        //�������� ������
+            if (itemStack.Count > 1)
             {
                 itemParent.gameObject.transform.localPosition = 
                     itemParent.itemSo.onGroundPos + 

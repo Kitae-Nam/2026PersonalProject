@@ -12,13 +12,15 @@ namespace _01_Script.Player
 
         private void Awake()
         {
-            _playerInput.OnInteractionChange += _carryItem.HandleItemImput;
+            _playerInput.OnInteractionChange += _carryItem.HandleItemInput;
+            _playerInput.OnInteractionCtrlChange += _carryItem.HandleItemDropAtOnce;
             _playerInput.OnMovementChange += _playerMove.HandleMoveInput;
             _playerInput.OnAttackChange += _equipItemUse.HandleInteractionInput;
         }
         private void OnDestroy()
         {
-            _playerInput.OnInteractionChange -= _carryItem.HandleItemImput;
+            _playerInput.OnInteractionChange -= _carryItem.HandleItemInput;
+            _playerInput.OnInteractionCtrlChange -= _carryItem.HandleItemDropAtOnce;
             _playerInput.OnMovementChange -= _playerMove.HandleMoveInput;
             _playerInput.OnAttackChange -= _equipItemUse.HandleInteractionInput;
         }

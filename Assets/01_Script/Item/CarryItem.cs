@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
 using Unity.VisualScripting;
@@ -18,11 +20,10 @@ namespace _01_Script.Item
         [SerializeField] private Vector3 _itemCarryOffset;
         [SerializeField] private Transform _itemCarryParent;
         [SerializeField] private float _pickUpDelay = 0.5f;
+        [SerializeField] private int _canCarryItemCount = 3;
+        [field:SerializeField] private int CurrentCarryCount => _itemStack.Count;
 
         private float _timer = 0f;
-
-        [SerializeField] private int _canCarryItemCount = 3;
-        [SerializeField] private int _currentCarryItemCount = 0;
 
         private Stack<ItemParent> _itemStack = new Stack<ItemParent>();
 
@@ -30,9 +31,11 @@ namespace _01_Script.Item
         private MaterialType _currentCarryMaterialType = MaterialType.None;
         private EquipmentType _currentCarryEquipmentType = EquipmentType.None;
 
+        private ItemPile _justDroppedPile;
+
         public bool IsCarryItem { get { return _itemStack.Count > 0; } }
         public Stack<ItemParent> ItemStack { get { return _itemStack; } }
-        private Tilemap _groundTile => GameManager.Instance.groundTile;
+        private Tilemap GroundTile => GameManager.Instance.groundTile;
         
         private void Update()
         {
@@ -41,29 +44,36 @@ namespace _01_Script.Item
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (_canCarryItemCount <= _currentCarryItemCount) return;
+            if (_canCarryItemCount <= CurrentCarryCount) return;
 
             bool isItemPileLayer = (_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0;
             if (isItemPileLayer && IsCarryItem)
             {
-                if (collision.gameObject.TryGetComponent<ItemPile>(out ItemPile itemPile))
+                if (collision.gameObject.TryGetComponent<ItemPile>(out ItemPile itemPile) && itemPile != _justDroppedPile)
                 {
                     if (itemPile.itemStack.Count == 0) return;
 
                     if (CanPileOn(itemPile))
                     {
-                        ItemParent[] topItemParent = itemPile.PopAllItem(_canCarryItemCount - _currentCarryItemCount);
+                        ItemParent[] topItemParent = itemPile.PopAllItem(_canCarryItemCount - CurrentCarryCount);
                         foreach (var item in topItemParent)
                         {
                             if(item == null) continue;
                             TryPickUp(item);
+                            item.CarredItem();
                         }
                     }
                 }
             }
         }
 
-        public void HandleItemImput()
+        private void OnTriggerExit(Collider other)
+        {
+            bool isItemPileLayer = (_itemPileLayers.value & (1 << other.gameObject.layer)) != 0;
+            if (isItemPileLayer) _justDroppedPile = null;
+        }
+
+        public void HandleItemInput()
         {
             if (_timer >= _pickUpDelay)
             {
@@ -74,6 +84,18 @@ namespace _01_Script.Item
                 else
                 {
                     ItemDropProcess();
+                }
+                _timer = 0f;
+            }
+        }
+
+        public void HandleItemDropAtOnce()
+        {
+            if (_timer >= _pickUpDelay)
+            {
+                if (IsCarryItem == true)
+                {
+                    ItemDropAtOnceProcess();
                 }
                 _timer = 0f;
             }
@@ -94,6 +116,7 @@ namespace _01_Script.Item
                         itemParentFromPile.CarredItem();
                     }
                 }
+
             }
             else
             {
@@ -101,7 +124,7 @@ namespace _01_Script.Item
             }
         }
 
-        private void ItemDropProcess()
+        private void ItemDropAtOnceProcess()
         {
             Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
 
@@ -118,20 +141,19 @@ namespace _01_Script.Item
                             itemDummy.PushItem(item);
                             item.DropedItem();
                         }
-                        _currentCarryItemCount = 0;
                         _itemStack.Clear();
-                        
-                        return;
                     }
+                    Debug.Log(CanPileOn(itemDummy));
                 }
             }
             else
             {
-                Vector3Int cellPos = _groundTile.WorldToCell(transform.position);
-                Vector3 dropPos = _groundTile.GetCellCenterWorld(cellPos);
+                Vector3Int cellPos = GroundTile.WorldToCell(transform.position);
+                Vector3 dropPos = GroundTile.GetCellCenterWorld(cellPos);
                 dropPos.y = 1;
 
                 ItemPile newItemPile = Instantiate(_itemPilePrefab, dropPos, Quaternion.identity);
+                _justDroppedPile = newItemPile;
                 newItemPile.transform.SetParent(GameManager.Instance.ItemPileParent);
                 foreach (var item in _itemStack)
                 {
@@ -139,7 +161,6 @@ namespace _01_Script.Item
                     newItemPile.PushItem(item);
                     item.DropedItem();
                 }
-                _currentCarryItemCount = 0;
                 _itemStack.Clear();
             }
             _currentCarryItemType = ItemType.None;
@@ -147,6 +168,48 @@ namespace _01_Script.Item
             _currentCarryEquipmentType = EquipmentType.None;
         }
 
+        private void ItemDropProcess()
+        {
+            Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
+
+            if (nearObj != null)
+            {
+                if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
+                {
+                    if (itemDummy.canStack == false) return;
+                    if (CanPileOn(itemDummy))
+                    {
+                        var item = _itemStack.Pop();
+                        item.transform.rotation = Quaternion.identity;
+                        itemDummy.PushItem(item);
+                        item.DropedItem();
+                    }
+                }
+            }
+            else
+            {
+                Vector3Int cellPos = GroundTile.WorldToCell(transform.position);
+                Vector3 dropPos = GroundTile.GetCellCenterWorld(cellPos);
+                dropPos.y = 1;
+
+                ItemPile newItemPile = Instantiate(_itemPilePrefab, dropPos, Quaternion.identity);
+                _justDroppedPile = newItemPile;
+                newItemPile.transform.SetParent(GameManager.Instance.ItemPileParent);
+
+                var item = _itemStack.Pop();
+                item.transform.rotation = Quaternion.identity;
+                newItemPile.PushItem(item);
+                
+                item.DropedItem();
+            }
+
+            if (IsCarryItem == false)
+            {
+                _currentCarryItemType = ItemType.None;
+                _currentCarryMaterialType = MaterialType.None;
+                _currentCarryEquipmentType = EquipmentType.None;
+            }
+        }
         private bool CanPileOn(ItemPile pile)
         {
             if (pile.itemStack.Count == 0) return true;
@@ -159,12 +222,10 @@ namespace _01_Script.Item
 
         private void TryPickUp(ItemParent itemParent)
         {
-            if (_itemStack.Contains(itemParent) == true || _currentCarryItemCount >= _canCarryItemCount || itemParent.isCanCarry == false)
+            if (_itemStack.Contains(itemParent) == true || CurrentCarryCount >= _canCarryItemCount || itemParent.isCanCarry == false)
                 return;
 
-            _currentCarryItemCount++;
-
-            if (_currentCarryItemCount <= 1)
+            if (CurrentCarryCount == 0)
             {
                 _itemStack.Push(itemParent);
 
@@ -179,7 +240,7 @@ namespace _01_Script.Item
                 _itemStack.Push(itemParent);
 
                 ItemPosEdit(itemParent, itemParent.itemSo.itemCarryPos +
-                    itemParent.itemSo.additionalCarryPos * (_currentCarryItemCount - 1));
+                    itemParent.itemSo.additionalCarryPos * (CurrentCarryCount - 1));
             }
         }
 
