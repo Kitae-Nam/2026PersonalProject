@@ -22,10 +22,10 @@ namespace _01_Script.HarvestableObject
         {
             currentHarvestCount--;
             HarvestEffect();
+            Debug.Log("아야");
 
             if (currentHarvestCount <= 0)
             {
-                Debugging.Log("채집됨");
                 HarvestDoneEffect();
                 if (harvestableSo.harvestedPrefab != null)
                 {

@@ -16,6 +16,8 @@ namespace _01_Script.Train
     {
         public Transform train;
 
+        public event Action OnRailBroken;
+
         [Inject] [SerializeField] private RailManager railManager;
         [SerializeField] private float _speed;
         private int _currentRailIndex = 0;
@@ -47,7 +49,12 @@ namespace _01_Script.Train
         {//todo : 레일의 스플린을 따라 이동한다. 스플린의 리스트 번호대로 움직이는것이 아닌 현재 위치에 따라 유동적으로 움직인다.
             //todo : 다 움직이면 다음 레일의 스플린을 찾아 다시 간다.
             if(!railManager) return;
-            if(railManager.GetNextRail(_currentRailIndex) == -1)  return;
+            if (railManager.GetNextRail(_currentRailIndex) == -1)
+            {
+                Debug.Log("길 끊김");
+                OnRailBroken?.Invoke();
+                return;
+            }
             
             _currentSplineContainer = railManager.RailsList[_currentRailIndex].CurrentSpline;
             _currentSpline = _currentSplineContainer.Spline;

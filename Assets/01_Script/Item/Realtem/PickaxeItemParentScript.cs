@@ -6,7 +6,7 @@ namespace _01_Script.Item.Realtem
     {
         public override void Use(GameObject harvestObj)
         {
-            if (harvestObj.TryGetComponent<HarvestableObject.HarvestableObject>(out HarvestableObject.HarvestableObject havaCompo))
+            if (harvestObj.TryGetComponent<HarvestableObject.HarvestableObject>(out var havaCompo))
             {
                 havaCompo.Harvest();
             }
@@ -19,7 +19,7 @@ namespace _01_Script.Item.Realtem
 
         public override void DropedItem()
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }
