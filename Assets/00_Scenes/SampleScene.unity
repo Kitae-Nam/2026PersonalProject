@@ -11643,6 +11643,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3387302511317601543, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+      propertyPath: _isFirstRail
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387302511317601543, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+      propertyPath: isShapeFixed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387302511317601543, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: <isCanCarry>k__BackingField
       value: 0
       objectReference: {fileID: 0}
