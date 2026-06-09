@@ -12,14 +12,23 @@ namespace _01_Script.Rails
 
         private void OnEnable()
         {
-            animator = GetComponent<Animator>();
+            animator = GetComponentInChildren<Animator>();
             OnRailMade += AnimationRail;
+        }
+
+        private void OnDisable()
+        {
+            OnRailMade -= AnimationRail;
         }
 
         private void AnimationRail()
         {
-            Debug.Log("AnimationRail");
-            animator.SetTrigger(_triggerHash);
+            Debug.Log("니니니");
+            if (animator != null)
+            {
+                Debug.Log("AnimationRail");
+                animator.SetTrigger(_triggerHash);
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ namespace _01_Script.Train
         private void WoodAdd()
         {
             ResourceAdd(woodItem);
+            ResourceAdd(rockItem);
         }
 
         [ContextMenu("RockAdd")]

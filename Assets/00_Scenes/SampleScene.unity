@@ -8249,7 +8249,7 @@ Transform:
   m_GameObject: {fileID: 233492350}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.827, z: 0}
+  m_LocalPosition: {x: 0, y: 0.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42595,7 +42595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a265a8c4a9f444ef83c77d04c2b67a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Train.CraftingTrain
-  railPrefab: {fileID: 3382159159981507511, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+  railPrefab: {fileID: 8862598764591387580, guid: 9f7b95b88f14818408cc78328a4b0d19, type: 3}
   railPoint: {fileID: 233492351}
   woodPoint: {fileID: 2970682848361093140}
   rockPoint: {fileID: 1209084468}
