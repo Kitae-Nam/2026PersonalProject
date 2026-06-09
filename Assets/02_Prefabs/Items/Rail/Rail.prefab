@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 339738321826212043}
   - component: {fileID: 3263860968825397924}
+  - component: {fileID: 6186595054610771491}
   - component: {fileID: 1796301480702530251}
   m_Layer: 10
   m_Name: Rail
@@ -67,6 +68,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   isConnected: 0
+  isFixedShape: 0
+--- !u!114 &6186595054610771491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8862598764591387580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b69cd6f05ef44e19690866577eb1d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Rails.RailAnimation
+  animator: {fileID: 6691802628779914847}
 --- !u!65 &1796301480702530251
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -424,6 +439,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: -7840867231617242486, guid: 2552d887ffef16042b9d10ca91186877, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d6631819a3d13874caeb51cacbf1f226, type: 2}
     - target: {fileID: -7550707655183477190, guid: 2552d887ffef16042b9d10ca91186877, type: 3}
       propertyPath: m_Layer
       value: 10
