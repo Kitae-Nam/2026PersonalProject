@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
+using _01_Script.Player;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -13,6 +14,8 @@ namespace _01_Script.Item
 {
     public class CarryItem : MonoBehaviour
     {
+        [SerializeField] private PlayerAnimationEventSo playerAnimationEvent;
+        
         [SerializeField] private ItemPile _itemPilePrefab;
 
         [SerializeField] private LayerMask _itemPileLayers;
@@ -62,6 +65,8 @@ namespace _01_Script.Item
                             TryPickUp(item);
                             item.CarredItem();
                         }
+
+                        RefreshCarryContext();
                     }
                 }
             }
@@ -85,6 +90,8 @@ namespace _01_Script.Item
                 {
                     ItemDropProcess();
                 }
+
+                RefreshCarryContext();
                 _timer = 0f;
             }
         }
@@ -97,6 +104,8 @@ namespace _01_Script.Item
                 {
                     ItemDropAtOnceProcess();
                 }
+                RefreshCarryContext();
+                
                 _timer = 0f;
             }
         }
@@ -143,7 +152,6 @@ namespace _01_Script.Item
                         }
                         _itemStack.Clear();
                     }
-                    Debug.Log(CanPileOn(itemDummy));
                 }
             }
             else
@@ -250,7 +258,19 @@ namespace _01_Script.Item
             itemParent.transform.localPosition = pos;
             itemParent.transform.localRotation = Quaternion.identity;
         }
+        private void RefreshCarryContext()
+        {
+            HandType context = HandType.None;
 
+            if (IsCarryItem)
+            {
+                context = _currentCarryEquipmentType != EquipmentType.None
+                    ? HandType.Equipment
+                    : HandType.Holding;
+            }
+
+            playerAnimationEvent.OnContextChangeInvoke(context);;
+        }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

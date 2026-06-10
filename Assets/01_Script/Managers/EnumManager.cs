@@ -4,6 +4,12 @@ public class EnumManager : MonoBehaviour
 {
 }
 
+public enum HandType
+{
+    None,
+    Holding,
+    Equipment,
+}
 public enum ItemType
 {
     None,
