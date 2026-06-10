@@ -256,7 +256,7 @@ namespace _01_Script.Item
         {
             itemParent.transform.SetParent(_itemCarryParent);
             itemParent.transform.localPosition = pos;
-            itemParent.transform.localRotation = Quaternion.identity;
+            itemParent.transform.localRotation = _itemStack.Peek().itemSo.carryRotation;
         }
         private void RefreshCarryContext()
         {

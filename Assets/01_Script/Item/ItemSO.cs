@@ -13,5 +13,6 @@ namespace _01_Script.Item
         public Vector3 additionalCarryPos;
         public Vector3 onGroundPos;
         public Vector3 onGroundAdditionalPos;
+        public Quaternion carryRotation =  Quaternion.identity;
     }
 }

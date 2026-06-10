@@ -28,7 +28,9 @@ namespace _01_Script.Managers
 
             foreach (var obj in _itemObjPosition)
             {
-                float distance = (obj.position - position).sqrMagnitude;
+                Vector3 diff = obj.position - position;
+                diff.y = 0f;
+                float distance = diff.sqrMagnitude;
 
                 if (distance <= radiusSqr)
                 {
