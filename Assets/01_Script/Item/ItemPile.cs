@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
+using _01_Script.Pool;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace _01_Script.Item
 {
-    public class ItemPile : MonoBehaviour
+    public class ItemPile : MonoBehaviour, IPoolable
     {
         public Stack<ItemParent> itemStack = new Stack<ItemParent>();
         [SerializeField] private List<ItemParent> _itemList;
@@ -104,6 +105,14 @@ namespace _01_Script.Item
             {
                 itemParent.gameObject.transform.localPosition = itemParent.itemSo.onGroundPos;
             }
+        }
+
+        public void OnPop()
+        {
+        }
+
+        public void OnPush()
+        {
         }
     }
 }
