@@ -1,3 +1,4 @@
+using System.Collections;
 using _01_Script.Managers;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace _01_Script.HarvestableObject
     public abstract class HarvestableObject : MonoBehaviour
     {
         public HarvestableSo harvestableSo;
+        [SerializeField] private float delay = 0.1f; 
         public int currentHarvestCount;
 
         protected virtual void Awake()
@@ -18,7 +20,7 @@ namespace _01_Script.HarvestableObject
         {
             currentHarvestCount = harvestableSo.harvestCount;
         }
-        public virtual void Harvest()
+        public virtual IEnumerator Harvest()
         {
             currentHarvestCount--;
             HarvestEffect();
@@ -29,8 +31,10 @@ namespace _01_Script.HarvestableObject
                 HarvestDoneEffect();
                 if (harvestableSo.harvestedPrefab != null)
                 {
+                    yield return new WaitForSeconds(delay);
                     Instantiate(harvestableSo.harvestedPrefab, transform.position, Quaternion.identity);
                 }
+
                 Destroy(gameObject);
             }
         }

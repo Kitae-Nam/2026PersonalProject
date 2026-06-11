@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ca3aecf3a42dd24290cee35236b3f9b, type: 3}
-  m_Name: Pickaxe
+  m_Name: Axe
   m_EditorClassIdentifier: 
   itemType: 2
   materialType: 0
-  equipmentType: 1
-  itemCarryPos: {x: 0.3, y: 0.4, z: 0.7}
+  equipmentType: 2
+  itemCarryPos: {x: 0.25, y: -0.05, z: 0.7}
   additionalCarryPos: {x: 0, y: 0, z: 0}
   onGroundPos: {x: 0, y: -1, z: 0}
   onGroundAdditionalPos: {x: 0, y: 0, z: 0}
-  carryRotation: {x: -0.45922917, y: -0.5376882, z: -0.5376882, w: 0.45922917}
+  carryRotation: {x: -0.3044174, y: -0.4005097, z: -0.6382242, w: 0.58274525}

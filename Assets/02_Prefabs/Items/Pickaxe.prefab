@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSo: {fileID: 11400000, guid: 4b9ef3c75bc0bf04bba423ab897c76ad, type: 2}
+  <isCanCarry>k__BackingField: 1
   havaLayer:
     serializedVersion: 2
     m_Bits: 4096
