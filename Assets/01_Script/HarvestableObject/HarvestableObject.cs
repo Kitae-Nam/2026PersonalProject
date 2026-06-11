@@ -1,10 +1,11 @@
 using System.Collections;
 using _01_Script.Managers;
+using _01_Script.Pool;
 using UnityEngine;
 
 namespace _01_Script.HarvestableObject
 {
-    public abstract class HarvestableObject : MonoBehaviour
+    public abstract class HarvestableObject : MonoBehaviour, IPoolable
     {
         public HarvestableSo harvestableSo;
         [SerializeField] private float delay = 0.1f; 
@@ -23,25 +24,37 @@ namespace _01_Script.HarvestableObject
         public virtual IEnumerator Harvest()
         {
             currentHarvestCount--;
-            HarvestEffect();
             Debug.Log("아야");
 
             if (currentHarvestCount <= 0)
             {
+                yield return new WaitForSeconds(delay);
                 HarvestDoneEffect();
                 if (harvestableSo.harvestedPrefab != null)
                 {
-                    yield return new WaitForSeconds(delay);
                     Instantiate(harvestableSo.harvestedPrefab, transform.position, Quaternion.identity);
                 }
 
                 Destroy(gameObject);
+            }
+            else
+            {
+                yield return new WaitForSeconds(delay);
+                HarvestEffect();
             }
         }
         public virtual void HarvestEffect()
         {
         }
         public virtual void HarvestDoneEffect()
+        {
+        }
+
+        public void OnPop()
+        {
+        }
+
+        public void OnPush()
         {
         }
     }

@@ -6,63 +6,101 @@ namespace _01_Script.Pool
 {
     public class PoolManager : MonoSingleton<PoolManager>
     {
-        [SerializeField] private PoolList _poolList;
-        private Dictionary<string, Queue<GameObject>> _poolDictionary;
+        [SerializeField] private PoolList poolList;
 
-        private void Start()
+        private Dictionary<string, Queue<GameObject>> _poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        private Dictionary<GameObject, string> _activeObjects = new Dictionary<GameObject, string>();
+
+        protected override void Awake()
         {
-            _poolDictionary = new Dictionary<string, Queue<GameObject>>();
-            for (int i = 0; i < _poolList.pools.Length; i++)
+            base.Awake();
+            InitializePools();
+        }
+
+        private void InitializePools()
+        {
+            if (poolList == null || poolList.pools == null) return;
+
+            foreach (var pool in poolList.pools)
             {
-                Pool pool = _poolList.pools[i];
-                Queue<GameObject> objectQueue = new Queue<GameObject>();
-                for (int j = 0; j < pool.count; j++)
+                if (pool.prefab == null) continue;
+
+                if (string.IsNullOrEmpty(pool.poolName))
+                    pool.poolName = pool.prefab.name;
+
+                _poolDictionary[pool.poolName] = new Queue<GameObject>();
+
+                GameObject poolParent = new GameObject($"Pool_{pool.poolName}");
+                poolParent.transform.SetParent(this.transform);
+
+                for (int i = 0; i < pool.initialCount; i++)
                 {
-                    GameObject poolObj = Instantiate(pool.prefab);
-                    objectQueue.Enqueue(poolObj);
-                    poolObj.name = pool.prefab.name;
-                    poolObj.SetActive(false);
+                    GameObject obj = Instantiate(pool.prefab, poolParent.transform);
+                    obj.SetActive(false);
+                    _poolDictionary[pool.poolName].Enqueue(obj);
                 }
-                _poolDictionary.Add(pool.prefab.name, objectQueue);
             }
         }
 
-        public GameObject Pop(string name)
+        public GameObject Spawn(string poolName, Vector3 position, Quaternion rotation)
         {
-            if (!_poolDictionary.ContainsKey(name))
+            if (!_poolDictionary.ContainsKey(poolName))
             {
-                Debug.Assert(false, $"PoolManager: Pop - {name} is not exists.");
+                Debug.LogWarning($"[PoolManager] {poolName} 풀이 리스트에 존재하지 않습니다.");
                 return null;
             }
 
-            foreach (var pool in _poolDictionary)
+            GameObject obj;
+
+            if (_poolDictionary[poolName].Count > 0)
             {
-                if (pool.Key == name)
-                {
-                    if (pool.Value.Count > 0)
-                    {
-                        GameObject obj = pool.Value.Dequeue();
-                        obj.SetActive(true);
-                        return obj;
-                    }
-                    else
-                    {
-                    
-                        return null;
-                    }
-                }
+                obj = _poolDictionary[poolName].Dequeue();
             }
-            return null;
-        }
-        public void Push(GameObject obj)
-        {
-            if (!_poolDictionary.ContainsKey(obj.name))
+            else
             {
-                Debug.Assert(false, $"PoolManager: Push - {obj.name} is not exists.");
+                // 리스트에서 매칭되는 원본 Pool 데이터를 찾아 동적 확장
+                PoolItem targetPool = poolList.pools.Find(p => p.poolName == poolName);
+                obj = Instantiate(targetPool.prefab);
+            }
+
+            obj.transform.position = position;
+            obj.transform.rotation = rotation;
+            obj.SetActive(true);
+
+            if (obj.TryGetComponent<IPoolable>(out var poolable))
+            {
+                poolable.OnPop();
+            }
+
+            _activeObjects[obj] = poolName;
+            return obj;
+        }
+
+        public void Despawn(GameObject obj)
+        {
+            if (obj == null) return;
+
+            if (!_activeObjects.ContainsKey(obj))
+            {
+                Debug.LogWarning($"[PoolManager] 풀을 통해 생성되지 않은 오브젝트({obj.name})입니다. Destroy 합니다.");
+                Destroy(obj);
                 return;
             }
-            _poolDictionary[obj.name].Enqueue(obj);
+
+            string poolName = _activeObjects[obj];
+            _activeObjects.Remove(obj);
+
+            if (obj.TryGetComponent<IPoolable>(out var poolable))
+            {
+                poolable.OnPush();
+            }
+
             obj.SetActive(false);
+
+            Transform parentFolder = transform.Find($"Pool_{poolName}");
+            if (parentFolder != null) obj.transform.SetParent(parentFolder);
+
+            _poolDictionary[poolName].Enqueue(obj);
         }
     }
 }

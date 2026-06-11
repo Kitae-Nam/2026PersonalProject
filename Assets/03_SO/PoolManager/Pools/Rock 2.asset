@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8938c7e11c20b74cbacecd81bbecb29, type: 3}
+  m_Name: Rock 2
+  m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolItem
+  poolName: Rock3
+  prefab: {fileID: 3785561765149312017, guid: 58d7453bed3455c4a902072dbe7b17d0, type: 3}
+  initialCount: 100

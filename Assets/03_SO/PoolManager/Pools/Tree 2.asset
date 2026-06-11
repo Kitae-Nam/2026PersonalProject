@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8938c7e11c20b74cbacecd81bbecb29, type: 3}
+  m_Name: Tree 2
+  m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolItem
+  poolName: Tree3
+  prefab: {fileID: 7014026238027233201, guid: 73db5a1f85b9d124a8659622b1ec7311, type: 3}
+  initialCount: 100
