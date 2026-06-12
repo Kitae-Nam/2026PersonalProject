@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using _01_Script.Managers;
 using _01_Script.Pool;
 using UnityEngine;
@@ -8,8 +9,12 @@ namespace _01_Script.HarvestableObject
     public abstract class HarvestableObject : MonoBehaviour, IPoolable
     {
         public HarvestableSo harvestableSo;
-        [SerializeField] private float delay = 0.1f; 
+        [SerializeField] private float delay = 0.1f;
+        [SerializeField] private string effectName;
+        [SerializeField] private Transform point;
         public int currentHarvestCount;
+
+        [SerializeField] private List<Vector3> scalse;
 
         protected virtual void Awake()
         {
@@ -23,7 +28,9 @@ namespace _01_Script.HarvestableObject
         }
         public virtual IEnumerator Harvest()
         {
-            currentHarvestCount--;
+            --currentHarvestCount;
+            if(currentHarvestCount > scalse.Count)
+                gameObject.transform.localScale = scalse[currentHarvestCount];
             Debug.Log("아야");
 
             if (currentHarvestCount <= 0)
@@ -45,9 +52,11 @@ namespace _01_Script.HarvestableObject
         }
         public virtual void HarvestEffect()
         {
+            PoolManager.Instance.Spawn(effectName, point.position, Quaternion.identity);
         }
         public virtual void HarvestDoneEffect()
         {
+            PoolManager.Instance.Spawn(effectName, point.position, Quaternion.identity);
         }
 
         public void OnPop()
@@ -56,6 +65,8 @@ namespace _01_Script.HarvestableObject
 
         public void OnPush()
         {
+            currentHarvestCount = harvestableSo.harvestCount;
+            transform.localScale = new Vector3(1, 1, 1);
         }
     }
 }
