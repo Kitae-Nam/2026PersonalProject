@@ -23,10 +23,8 @@ namespace _01_Script.Rails
 
         private void AnimationRail()
         {
-            Debug.Log("니니니");
             if (animator != null)
             {
-                Debug.Log("AnimationRail");
                 animator.SetTrigger(_triggerHash);
             }
         }

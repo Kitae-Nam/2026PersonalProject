@@ -148,7 +148,7 @@ MonoBehaviour:
   effectName: RockEffect
   point: {fileID: 7647561788573738884}
   currentHarvestCount: 0
-  scalse:
+  scales:
   - {x: 0.3, y: 0.3, z: 0.3}
   - {x: 0.6, y: 0.6, z: 0.6}
   - {x: 0.9, y: 0.9, z: 0.9}

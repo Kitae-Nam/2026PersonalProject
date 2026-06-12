@@ -1,19 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _01_Script.Item;
 using _01_Script.Item.Realtem;
+using _01_Script.Managers;
 using _01_Script.Rails;
 using UnityEngine;
 
 namespace _01_Script.Train
 {
-    public class CraftingTrain : MonoBehaviour, ITrain
+    public class CraftingTrain : MonoBehaviour, ITrain, IItemReceiver
     {//todo: 일단 추가되면 위치 조정해주고 추가되었을때 레일 만들 수 있는지 확인하고 만들기
         [SerializeField] private GameObject railPrefab;
         [SerializeField] private Transform railPoint;
         [SerializeField] private Transform woodPoint;
         [SerializeField] private Transform rockPoint;
         [SerializeField] private float railMakingTime;
+        
+        [SerializeField] private int _maxWoodCount = 5;
+        [SerializeField] private int _maxRockCount = 5;
         
         public ItemParent woodItem;
         public ItemParent rockItem;
@@ -22,6 +28,12 @@ namespace _01_Script.Train
         private Stack<ItemParent> rockItems = new Stack<ItemParent>();
         private bool isMaking = false;
         private ItemParent _currentItem;
+
+
+        private void Start()
+        {
+            ObjPositionManager.Instance.AddItemPosition(this.gameObject.transform);
+        }
 
         [ContextMenu("WoodAdd")]
         private void WoodAdd()
@@ -39,17 +51,27 @@ namespace _01_Script.Train
         public void ResourceAdd(ItemParent resourceItem)
         {
             if (resourceItem == null) return;
-            _currentItem = resourceItem;
             
-            if(resourceItem.itemSo.materialType == MaterialType.Wood)
+            if (resourceItem.itemSo.materialType == MaterialType.Wood)
             {
-                woodItems.Push(resourceItem); 
+                if (woodItems.Count >= _maxWoodCount) return;
+            }
+            else if (resourceItem.itemSo.materialType == MaterialType.Rock)
+            {
+                if (rockItems.Count >= _maxRockCount) return;
+            }
+            else return;
+
+            _currentItem = resourceItem;
+
+            if (resourceItem.itemSo.materialType == MaterialType.Wood)
+            {
+                woodItems.Push(resourceItem);
             }
             else if (resourceItem.itemSo.materialType == MaterialType.Rock)
             {
                 rockItems.Push(resourceItem);
             }
-            else return;
 
             _currentItem.itemGo.transform.position = PosEdit(resourceItem.itemSo.materialType);
             if(isMaking == false)
@@ -72,6 +94,8 @@ namespace _01_Script.Train
             Destroy(rockItem.itemGo);
             
             var rail = Instantiate(railPrefab, railPoint.position, Quaternion.identity);
+            rail.transform.SetParent(railPoint);
+            rail.transform.rotation = railPoint.rotation;
             if (rail.TryGetComponent(out RailAnimation rc))
             {
                 rc.OnRailMade?.Invoke();
@@ -92,23 +116,37 @@ namespace _01_Script.Train
                 }
                 else
                 {
-                    return woodPoint.position + _currentItem.itemSo.onGroundAdditionalPos;
+                    return woodPoint.position+ _currentItem.itemSo.onGroundPos + _currentItem.itemSo.onGroundAdditionalPos;
                 }
             }
             else
             {
                 _currentItem.transform.SetParent(rockPoint);
-                if (rockItems.Count == 0)
+                if (rockItems.Count <= 1)
                 {
-                    return woodPoint.position + _currentItem.itemSo.onGroundPos;
+                    return rockPoint.position + _currentItem.itemSo.onGroundPos;
                 }
                 else
                 {
-                    return woodPoint.position + _currentItem.itemSo.onGroundAdditionalPos;
+                    return rockPoint.position + _currentItem.itemSo.onGroundAdditionalPos * (rockItems.Count -1);
                 }
-                
             }
         }
 
+        public bool CanReceive(ItemType itemType, MaterialType materialType, EquipmentType equipmentType)
+        {
+            if (materialType == MaterialType.Wood)
+                return woodItems.Count < _maxWoodCount;
+
+            if (materialType == MaterialType.Rock)
+                return rockItems.Count < _maxRockCount;
+
+            return false;
+        }
+
+        public void Receive(ItemParent item)
+        {
+            ResourceAdd(item);
+        }
     }
 }

@@ -26,6 +26,9 @@ namespace _01_Script.Item
         [SerializeField] private int _canCarryItemCount = 3;
         [field:SerializeField] private int CurrentCarryCount => _itemStack.Count;
 
+        [SerializeField] private LayerMask _receiverLayers;
+        private IItemReceiver _triggerReceiver;
+
         private float _timer = 0f;
 
         private Stack<ItemParent> _itemStack = new Stack<ItemParent>();
@@ -47,6 +50,12 @@ namespace _01_Script.Item
 
         private void OnTriggerEnter(Collider collision)
         {
+            bool isReceiverLayer = (_receiverLayers.value & (1 << collision.gameObject.layer)) != 0;
+            if (isReceiverLayer)
+            {
+                var receiver = collision.GetComponentInParent<IItemReceiver>();
+                if (receiver != null) _triggerReceiver = receiver;
+            }
             if (_canCarryItemCount <= CurrentCarryCount) return;
 
             bool isItemPileLayer = (_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0;
@@ -74,6 +83,12 @@ namespace _01_Script.Item
 
         private void OnTriggerExit(Collider other)
         {
+            bool isReceiverLayer = (_receiverLayers.value & (1 << other.gameObject.layer)) != 0;
+            if (isReceiverLayer)
+            {
+                var receiver = other.GetComponentInParent<IItemReceiver>();
+                if (receiver != null && receiver == _triggerReceiver) _triggerReceiver = null;
+            }
             bool isItemPileLayer = (_itemPileLayers.value & (1 << other.gameObject.layer)) != 0;
             if (isItemPileLayer) _justDroppedPile = null;
         }
@@ -135,19 +150,31 @@ namespace _01_Script.Item
 
         private void ItemDropAtOnceProcess()
         {
+            if (_triggerReceiver != null)
+            {
+                if (_triggerReceiver.CanReceive(_currentCarryItemType, _currentCarryMaterialType,
+                        _currentCarryEquipmentType))
+                {
+                    var item = _itemStack.Pop();
+                    item.transform.rotation = Quaternion.identity;
+                    _triggerReceiver.Receive(item);
+                    item.DropedItem();
+                }
+
+                return;
+            }
             Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
 
             if (nearObj != null)
             {
-                if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
+                if (nearObj.TryGetComponent<IItemReceiver>(out IItemReceiver itemDummy))
                 {
-                    if (itemDummy.canStack == false) return;
-                    if (CanPileOn(itemDummy))
+                    if (itemDummy.CanReceive(_currentCarryItemType, _currentCarryMaterialType, _currentCarryEquipmentType))
                     {
                         foreach (var item in _itemStack)
                         {
                             item.transform.rotation = Quaternion.identity;
-                            itemDummy.PushItem(item);
+                            itemDummy.Receive(item);
                             item.DropedItem();
                         }
                         _itemStack.Clear();
@@ -178,18 +205,31 @@ namespace _01_Script.Item
 
         private void ItemDropProcess()
         {
+            if (_triggerReceiver != null)
+            {
+                if (_triggerReceiver.CanReceive(_currentCarryItemType, _currentCarryMaterialType,
+                        _currentCarryEquipmentType))
+                {
+                    var item = _itemStack.Pop();
+                    item.transform.rotation = Quaternion.identity;
+                    _triggerReceiver.Receive(item);
+                    item.DropedItem();
+                }
+
+                return;
+            }
+
             Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
 
             if (nearObj != null)
             {
-                if (nearObj.TryGetComponent<ItemPile>(out ItemPile itemDummy))
+                if (nearObj.TryGetComponent<IItemReceiver>(out IItemReceiver itemDummy))
                 {
-                    if (itemDummy.canStack == false) return;
-                    if (CanPileOn(itemDummy))
+                    if (itemDummy.CanReceive(_currentCarryItemType, _currentCarryMaterialType, _currentCarryEquipmentType))
                     {
                         var item = _itemStack.Pop();
                         item.transform.rotation = Quaternion.identity;
-                        itemDummy.PushItem(item);
+                        itemDummy.Receive(item);
                         item.DropedItem();
                     }
                 }

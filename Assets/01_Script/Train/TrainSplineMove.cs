@@ -66,8 +66,8 @@ namespace _01_Script.Train
 
         private void RailStartPosCalculate()
         {
-            float distance1 = Vector3.Distance(transform.position, _currentSplineContainer.EvaluatePosition(0));
-            float distance2 = Vector3.Distance(transform.position, _currentSplineContainer.EvaluatePosition(1));
+            float distance1 = Vector3.Distance(train.position, _currentSplineContainer.EvaluatePosition(0));
+            float distance2 = Vector3.Distance(train.position, _currentSplineContainer.EvaluatePosition(1));
             
             bool whoClose = distance1 < distance2;//true = 1번이 더 멀다
             _isReverse = !whoClose;
@@ -107,10 +107,10 @@ namespace _01_Script.Train
                 }
                 if (_moveDir != Vector3.zero)
                 {
-                    transform.rotation = Quaternion.LookRotation(_moveDir);
+                    train.rotation = Quaternion.LookRotation(_moveDir);
                 }
                 
-                transform.position = _targetPosition;
+                train.position = _targetPosition;
                 yield return null;
             }
             Debugging.Log($"레일 {_currentRailIndex}번째 다 이동함");

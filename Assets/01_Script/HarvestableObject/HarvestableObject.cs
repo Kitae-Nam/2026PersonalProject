@@ -14,7 +14,7 @@ namespace _01_Script.HarvestableObject
         [SerializeField] private Transform point;
         public int currentHarvestCount;
 
-        [SerializeField] private List<Vector3> scalse;
+        [SerializeField] private List<Vector3> scales;
 
         protected virtual void Awake()
         {
@@ -28,14 +28,14 @@ namespace _01_Script.HarvestableObject
         }
         public virtual IEnumerator Harvest()
         {
+            if (currentHarvestCount == 0) yield break;
             --currentHarvestCount;
-            if(currentHarvestCount > scalse.Count)
-                gameObject.transform.localScale = scalse[currentHarvestCount];
             Debug.Log("아야");
 
             if (currentHarvestCount <= 0)
             {
                 yield return new WaitForSeconds(delay);
+                gameObject.transform.localScale = scales[currentHarvestCount];
                 HarvestDoneEffect();
                 if (harvestableSo.harvestedPrefab != null)
                 {
@@ -47,7 +47,13 @@ namespace _01_Script.HarvestableObject
             else
             {
                 yield return new WaitForSeconds(delay);
+                gameObject.transform.localScale = scales[currentHarvestCount];
                 HarvestEffect();
+            }
+            if (currentHarvestCount == 0)
+            {
+                PoolManager.Instance.Despawn(this.gameObject);
+                yield break;
             }
         }
         public virtual void HarvestEffect()

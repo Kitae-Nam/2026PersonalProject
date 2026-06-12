@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8752825712216261571
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1594940902279458359}
+  m_Layer: 8
+  m_Name: Point (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1594940902279458359
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752825712216261571}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 14.41, z: -0.25}
+  m_LocalScale: {x: 1.3333333, y: 1.3333333, z: 1.3333333}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4295583649759382093}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4329722787491949990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
       propertyPath: m_LocalRotation.w
@@ -38,7 +69,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
       propertyPath: m_LocalRotation.y
@@ -78,7 +109,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1594940902279458359}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
       insertIndex: -1
@@ -126,4 +160,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.HarvestableObject.TreeItem
   harvestableSo: {fileID: 11400000, guid: 735d071a4a245284b867f7d49e48ce79, type: 2}
+  delay: 0.5
+  effectName: TreeEffect
+  point: {fileID: 1594940902279458359}
   currentHarvestCount: 0
+  scales:
+  - {x: 0.045, y: 0.045, z: 0.045}
+  - {x: 0.09, y: 0.09, z: 0.09}
+  - {x: 0.135, y: 0.135, z: 0.135}
+--- !u!4 &4295583649759382093 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6da76198645eac459dc45a6df1b8c38, type: 3}
+  m_PrefabInstance: {fileID: 4329722787491949990}
+  m_PrefabAsset: {fileID: 0}

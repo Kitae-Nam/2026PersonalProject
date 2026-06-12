@@ -41,7 +41,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: be7360d8648455143b5cb4ab9c79242c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: be7360d8648455143b5cb4ab9c79242c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -49,7 +49,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: be7360d8648455143b5cb4ab9c79242c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: -1.9999998
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: be7360d8648455143b5cb4ab9c79242c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -148,7 +148,7 @@ MonoBehaviour:
   effectName: RockEffect
   point: {fileID: 4057853076219916552}
   currentHarvestCount: 0
-  scalse:
+  scales:
   - {x: 0.3, y: 0.3, z: 0.3}
   - {x: 0.6, y: 0.6, z: 0.6}
   - {x: 0.9, y: 0.9, z: 0.9}

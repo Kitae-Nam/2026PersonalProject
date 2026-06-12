@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8938c7e11c20b74cbacecd81bbecb29, type: 3}
+  m_Name: TreeEffect
+  m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolItem
+  poolName: TreeEffect
+  prefab: {fileID: 1122053790345629548, guid: 7e3d35cac1f49de41b8bbf128adf8a27, type: 3}
+  initialCount: 5

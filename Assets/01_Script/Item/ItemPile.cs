@@ -9,7 +9,7 @@ using UnityEngine.Rendering;
 
 namespace _01_Script.Item
 {
-    public class ItemPile : MonoBehaviour, IPoolable
+    public class ItemPile : MonoBehaviour, IPoolable, IItemReceiver
     {
         public Stack<ItemParent> itemStack = new Stack<ItemParent>();
         [SerializeField] private List<ItemParent> _itemList;
@@ -113,6 +113,23 @@ namespace _01_Script.Item
 
         public void OnPush()
         {
+        }
+
+        public bool CanReceive(ItemType itemType, MaterialType materialType, EquipmentType equipmentType)
+        {
+            if (canStack == false) return false;
+
+            if (itemStack.Count == 0) return true;
+
+            var topSo = itemStack.Peek().itemSo;
+            return topSo.itemType == itemType &&
+                   topSo.materialType == materialType &&
+                   topSo.equipmentType == equipmentType;
+        }
+
+        public void Receive(ItemParent item)
+        {
+            PushItem(item);
         }
     }
 }
