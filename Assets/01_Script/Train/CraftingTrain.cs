@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace _01_Script.Train
 {
-    public class CraftingTrain : MonoBehaviour
+    public class CraftingTrain : MonoBehaviour, ITrain
     {//todo: 일단 추가되면 위치 조정해주고 추가되었을때 레일 만들 수 있는지 확인하고 만들기
         [SerializeField] private GameObject railPrefab;
         [SerializeField] private Transform railPoint;
