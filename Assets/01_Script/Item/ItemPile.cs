@@ -4,12 +4,13 @@ using System.Linq;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
 using _01_Script.Pool;
+using _01_Script.Train;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace _01_Script.Item
 {
-    public class ItemPile : MonoBehaviour, IPoolable, IItemReceiver
+    public class ItemPile : MonoBehaviour, IPoolable, IItemReceiver, ISender
     {
         public Stack<ItemParent> itemStack = new Stack<ItemParent>();
         [SerializeField] private List<ItemParent> _itemList;
@@ -130,6 +131,11 @@ namespace _01_Script.Item
         public void Receive(ItemParent item)
         {
             PushItem(item);
+        }
+
+        public ItemParent RailGet()
+        {
+            return PopItem();
         }
     }
 }

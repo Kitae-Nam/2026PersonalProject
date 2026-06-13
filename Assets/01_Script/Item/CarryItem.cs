@@ -5,6 +5,7 @@ using System.Net;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
 using _01_Script.Player;
+using _01_Script.Train;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -27,7 +28,9 @@ namespace _01_Script.Item
         [field:SerializeField] private int CurrentCarryCount => _itemStack.Count;
 
         [SerializeField] private LayerMask _receiverLayers;
+        [SerializeField] private LayerMask _senderLayers;
         private IItemReceiver _triggerReceiver;
+        private ISender _triggerSender;
 
         private float _timer = 0f;
 
@@ -55,28 +58,51 @@ namespace _01_Script.Item
             {
                 var receiver = collision.GetComponentInParent<IItemReceiver>();
                 if (receiver != null) _triggerReceiver = receiver;
+                
             }
+            
+            bool isSederLayer = (_senderLayers.value & (1 << collision.gameObject.layer)) != 0;
+            if (isSederLayer)
+            {
+                var sender = collision.GetComponent<ISender>();
+                if (sender != null)
+                {
+                    _triggerSender = sender;
+                    Debug.Log(collision.gameObject.name);
+                }
+                
+                if(IsCarryItem)
+                {
+                    ItemGetByCollision(collision);
+                }
+            }
+            
             if (_canCarryItemCount <= CurrentCarryCount) return;
 
             bool isItemPileLayer = (_itemPileLayers.value & (1 << collision.gameObject.layer)) != 0;
             if (isItemPileLayer && IsCarryItem)
             {
-                if (collision.gameObject.TryGetComponent<ItemPile>(out ItemPile itemPile) && itemPile != _justDroppedPile)
+                ItemGetByCollision(collision);
+            }
+        }
+
+        private void ItemGetByCollision(Collider collision)
+        {
+            if (collision.gameObject.TryGetComponent<ItemPile>(out ItemPile itemPile) && itemPile != _justDroppedPile)
+            {
+                if (itemPile.itemStack.Count == 0) return;
+
+                if (CanPileOn(itemPile))
                 {
-                    if (itemPile.itemStack.Count == 0) return;
-
-                    if (CanPileOn(itemPile))
+                    ItemParent[] topItemParent = itemPile.PopAllItem(_canCarryItemCount - CurrentCarryCount);
+                    foreach (var item in topItemParent)
                     {
-                        ItemParent[] topItemParent = itemPile.PopAllItem(_canCarryItemCount - CurrentCarryCount);
-                        foreach (var item in topItemParent)
-                        {
-                            if(item == null) continue;
-                            TryPickUp(item);
-                            item.CarredItem();
-                        }
-
-                        RefreshCarryContext();
+                        if(item == null) continue;
+                        TryPickUp(item);
+                        item.CarredItem();
                     }
+
+                    RefreshCarryContext();
                 }
             }
         }
@@ -89,6 +115,13 @@ namespace _01_Script.Item
                 var receiver = other.GetComponentInParent<IItemReceiver>();
                 if (receiver != null && receiver == _triggerReceiver) _triggerReceiver = null;
             }
+            bool isSederLayer = (_receiverLayers.value & (1 << other.gameObject.layer)) != 0;
+            if (isSederLayer)
+            {
+                var receiver = other.GetComponent<ISender>();
+                if (receiver != null && receiver == _triggerSender) _triggerSender = null;
+            }
+
             bool isItemPileLayer = (_itemPileLayers.value & (1 << other.gameObject.layer)) != 0;
             if (isItemPileLayer) _justDroppedPile = null;
         }
@@ -127,6 +160,19 @@ namespace _01_Script.Item
 
         private void ItemPickUpProcess()
         {
+            if (_triggerSender != null)
+            {
+                var itemDummy = _triggerSender as ContainerTrain;
+                ItemParent itemParentFromPile = itemDummy.RailGet();
+                if (itemParentFromPile != null)
+                {
+                    TryPickUp(itemParentFromPile);
+                    itemParentFromPile.CarredItem();
+                }
+
+                return;
+            }
+            
             Transform nearObj = ObjPositionManager.Instance.GetNearestItemPosition(transform.position + _itemCarryOffset, _itemCarryRange);
 
             if (nearObj != null)
@@ -155,10 +201,12 @@ namespace _01_Script.Item
                 if (_triggerReceiver.CanReceive(_currentCarryItemType, _currentCarryMaterialType,
                         _currentCarryEquipmentType))
                 {
-                    var item = _itemStack.Pop();
-                    item.transform.rotation = Quaternion.identity;
-                    _triggerReceiver.Receive(item);
-                    item.DropedItem();
+                    foreach (var item in _itemStack)
+                    {
+                        item.transform.rotation = Quaternion.identity;
+                        _triggerReceiver.Receive(item);
+                        item.DropedItem();
+                    }
                 }
 
                 return;

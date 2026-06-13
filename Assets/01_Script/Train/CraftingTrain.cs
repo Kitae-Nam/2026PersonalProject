@@ -13,7 +13,7 @@ namespace _01_Script.Train
     public class CraftingTrain : MonoBehaviour, ITrain, IItemReceiver
     {//todo: 일단 추가되면 위치 조정해주고 추가되었을때 레일 만들 수 있는지 확인하고 만들기
         [SerializeField] private GameObject railPrefab;
-        [SerializeField] private Transform railPoint;
+        [SerializeField] private ContainerTrain railPoint;
         [SerializeField] private Transform woodPoint;
         [SerializeField] private Transform rockPoint;
         [SerializeField] private float railMakingTime;
@@ -93,11 +93,12 @@ namespace _01_Script.Train
             Destroy(woodItem.itemGo);
             Destroy(rockItem.itemGo);
             
-            var rail = Instantiate(railPrefab, railPoint.position, Quaternion.identity);
-            rail.transform.SetParent(railPoint);
-            rail.transform.rotation = railPoint.rotation;
+            var rail = Instantiate(railPrefab, railPoint.transform.position, Quaternion.identity);
+            rail.transform.SetParent(railPoint.transform);
+            rail.transform.rotation = railPoint.transform.rotation;
             if (rail.TryGetComponent(out RailAnimation rc))
             {
+                railPoint.RailAdd(rc.GetComponent<Rail>());
                 rc.OnRailMade?.Invoke();
             }
 
