@@ -14,9 +14,11 @@ namespace _01_Script.Train
 {
     public class TrainSplineMove : MonoBehaviour
     {
-        public Transform train;
+        public Transform trainPosition;
+        public Transform trainRotation;
 
         public event Action OnRailBroken;
+        public event Action OnRailStation;
 
         [Inject] [SerializeField] private RailManager railManager;
         [SerializeField] private float _speed;
@@ -36,7 +38,7 @@ namespace _01_Script.Train
 
         private void Start()
         {
-            if(train == null) train = transform;
+            if(trainPosition == null) trainPosition = transform;
         }
 
         [ContextMenu("초기화")]
@@ -51,7 +53,7 @@ namespace _01_Script.Train
             if(!railManager) return;
             if (railManager.GetNextRail(_currentRailIndex) == -1)
             {
-                Debug.Log("길 끊김");
+                Debugging.Log("길 끊김");
                 OnRailBroken?.Invoke();
                 return;
             }
@@ -66,8 +68,8 @@ namespace _01_Script.Train
 
         private void RailStartPosCalculate()
         {
-            float distance1 = Vector3.Distance(train.position, _currentSplineContainer.EvaluatePosition(0));
-            float distance2 = Vector3.Distance(train.position, _currentSplineContainer.EvaluatePosition(1));
+            float distance1 = Vector3.Distance(trainPosition.position, _currentSplineContainer.EvaluatePosition(0));
+            float distance2 = Vector3.Distance(trainPosition.position, _currentSplineContainer.EvaluatePosition(1));
             
             bool whoClose = distance1 < distance2;//true = 1번이 더 멀다
             _isReverse = !whoClose;
@@ -107,10 +109,10 @@ namespace _01_Script.Train
                 }
                 if (_moveDir != Vector3.zero)
                 {
-                    train.rotation = Quaternion.LookRotation(_moveDir);
+                    trainRotation.rotation = Quaternion.LookRotation(_moveDir);
                 }
                 
-                train.position = _targetPosition;
+                trainPosition.position = _targetPosition;
                 yield return null;
             }
             Debugging.Log($"레일 {_currentRailIndex}번째 다 이동함");
@@ -119,6 +121,15 @@ namespace _01_Script.Train
 
         private void OnPathComplete()
         {
+            var currentRail = railManager.RailsList[_currentRailIndex];
+
+            if (currentRail.isStationRail) 
+            {
+                Debugging.Log("정거장 도착");
+                OnRailStation?.Invoke();
+                return;
+            }
+            
             _currentRailIndex++;
             TrainMoveCalculate();
         }

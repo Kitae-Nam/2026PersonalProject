@@ -32,7 +32,7 @@ namespace _01_Script.Managers
                 diff.y = 0f;
                 float distance = diff.sqrMagnitude;
 
-                if (distance <= radiusSqr)
+                if (distance <= radiusSqr && obj.gameObject.activeSelf == true)
                 {
                     if (distance < nearestDistance)
                     {

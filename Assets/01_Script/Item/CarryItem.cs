@@ -5,6 +5,7 @@ using System.Net;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
 using _01_Script.Player;
+using _01_Script.Pool;
 using _01_Script.Train;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace _01_Script.Item
     {
         [SerializeField] private PlayerAnimationEventSo playerAnimationEvent;
         
-        [SerializeField] private ItemPile _itemPilePrefab;
+        [SerializeField] private String ItemPileName;
 
         [SerializeField] private LayerMask _itemPileLayers;
         [SerializeField] private float _itemCarryRange;
@@ -235,7 +236,7 @@ namespace _01_Script.Item
                 Vector3 dropPos = GroundTile.GetCellCenterWorld(cellPos);
                 dropPos.y = 1;
 
-                ItemPile newItemPile = Instantiate(_itemPilePrefab, dropPos, Quaternion.identity);
+                ItemPile newItemPile = PoolManager.Instance.Spawn(ItemPileName, dropPos, Quaternion.identity).GetComponent<ItemPile>();
                 _justDroppedPile = newItemPile;
                 newItemPile.transform.SetParent(GameManager.Instance.ItemPileParent);
                 foreach (var item in _itemStack)
@@ -288,7 +289,7 @@ namespace _01_Script.Item
                 Vector3 dropPos = GroundTile.GetCellCenterWorld(cellPos);
                 dropPos.y = 1;
 
-                ItemPile newItemPile = Instantiate(_itemPilePrefab, dropPos, Quaternion.identity);
+                ItemPile newItemPile = PoolManager.Instance.Spawn(ItemPileName, dropPos, Quaternion.identity).GetComponent<ItemPile>();
                 _justDroppedPile = newItemPile;
                 newItemPile.transform.SetParent(GameManager.Instance.ItemPileParent);
 

@@ -63,9 +63,9 @@ namespace _01_Script.Pool
                 obj = Instantiate(targetPool.prefab);
             }
 
+            obj.SetActive(true);
             obj.transform.position = position;
             obj.transform.rotation = rotation;
-            obj.SetActive(true);
 
             if (obj.TryGetComponent<IPoolable>(out var poolable))
             {
