@@ -37,9 +37,9 @@ namespace _01_Script.HarvestableObject
                 yield return new WaitForSeconds(delay);
                 gameObject.transform.localScale = scales[currentHarvestCount];
                 HarvestDoneEffect();
-                if (harvestableSo.harvestedPrefab != null)
+                if (harvestableSo.harvestingName != null)
                 {
-                    Instantiate(harvestableSo.harvestedPrefab, transform.position, Quaternion.identity);
+                    PoolManager.Instance.Spawn(harvestableSo.harvestingName, point.position, Quaternion.identity);
                 }
 
                 Destroy(gameObject);

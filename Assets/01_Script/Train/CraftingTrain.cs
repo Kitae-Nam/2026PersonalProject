@@ -5,6 +5,7 @@ using System.Linq;
 using _01_Script.Item;
 using _01_Script.Item.Realtem;
 using _01_Script.Managers;
+using _01_Script.Pool;
 using _01_Script.Rails;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace _01_Script.Train
 {
     public class CraftingTrain : MonoBehaviour, ITrain, IItemReceiver
     {//todo: 일단 추가되면 위치 조정해주고 추가되었을때 레일 만들 수 있는지 확인하고 만들기
-        [SerializeField] private GameObject railPrefab;
+        [SerializeField] private string railName;
         [SerializeField] private ContainerTrain railPoint;
         [SerializeField] private Transform woodPoint;
         [SerializeField] private Transform rockPoint;
@@ -92,10 +93,9 @@ namespace _01_Script.Train
             //임시
             Destroy(woodItem.itemGo);
             Destroy(rockItem.itemGo);
-            
-            var rail = Instantiate(railPrefab, railPoint.transform.position, Quaternion.identity);
+
+            var rail = PoolManager.Instance.Spawn(railName, railPoint.transform.position, railPoint.transform.rotation);
             rail.transform.SetParent(railPoint.transform);
-            rail.transform.rotation = railPoint.transform.rotation;
             if (rail.TryGetComponent(out RailAnimation rc))
             {
                 railPoint.RailAdd(rc.GetComponent<Rail>());

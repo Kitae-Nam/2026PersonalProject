@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Tree
   m_EditorClassIdentifier: 
   harvestCount: 3
-  harvestedPrefab: {fileID: 5523410306157101950, guid: d5ac6550b7c3d6d45b447144cb236dd4, type: 3}
+  harvestingName: Wood

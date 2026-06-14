@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Rail
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolItem
   poolName: Rail
-  prefab: {fileID: 3382159159981507511, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
+  prefab: {fileID: 8862598764591387580, guid: 9f7b95b88f14818408cc78328a4b0d19, type: 3}
   initialCount: 1000

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Rock
   m_EditorClassIdentifier: 
   harvestCount: 3
-  harvestedPrefab: {fileID: 5604519959905352207, guid: 8416955a3f7b28e43b32fcb213496593, type: 3}
+  harvestingName: Stone

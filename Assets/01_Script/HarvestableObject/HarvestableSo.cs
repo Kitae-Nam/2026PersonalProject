@@ -6,7 +6,7 @@ namespace _01_Script.HarvestableObject
     public class HarvestableSo : ScriptableObject
     {
         public int harvestCount = 3;
-        public GameObject harvestedPrefab;
+        public string harvestingName;
    
     }
 }
