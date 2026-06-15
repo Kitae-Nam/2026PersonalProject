@@ -39,7 +39,7 @@ namespace _01_Script.HarvestableObject
                 HarvestDoneEffect();
                 if (harvestableSo.harvestingName != null)
                 {
-                    PoolManager.Instance.Spawn(harvestableSo.harvestingName, point.position, Quaternion.identity);
+                    PoolManager.Instance.Spawn(harvestableSo.harvestingName, transform.position + new Vector3(0,1,0), Quaternion.identity);
                 }
 
                 Destroy(gameObject);

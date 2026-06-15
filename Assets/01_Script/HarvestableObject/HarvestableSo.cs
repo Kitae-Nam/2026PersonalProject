@@ -7,6 +7,5 @@ namespace _01_Script.HarvestableObject
     {
         public int harvestCount = 3;
         public string harvestingName;
-   
     }
 }

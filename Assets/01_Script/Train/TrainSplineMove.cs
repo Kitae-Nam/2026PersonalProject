@@ -21,7 +21,7 @@ namespace _01_Script.Train
         public event Action OnRailStation;
 
         [Inject] [SerializeField] private RailManager railManager;
-        [SerializeField] private float _speed;
+        [SerializeField] private TrainInfoSo trainSo;
         private int _currentRailIndex = 0;
         private bool _isReverse = false;//false=0->1, true=1->0
         private Spline _currentSpline;
@@ -82,15 +82,15 @@ namespace _01_Script.Train
             
             while (isReverse ? (_distance > 0f) : (_distance < _totalLength))
             {
-                if(_speed == 0)  yield break;
+                if(trainSo.speed == 0)  yield break;
                 
                 if (isReverse)
                 {
-                    _distance -= _speed * Time.deltaTime;
+                    _distance -= trainSo.speed * Time.deltaTime;
                 }
                 else
                 {
-                    _distance += _speed * Time.deltaTime;
+                    _distance += trainSo.speed * Time.deltaTime;
                 }
                 _distance = Mathf.Clamp(_distance,0f, _totalLength);
 

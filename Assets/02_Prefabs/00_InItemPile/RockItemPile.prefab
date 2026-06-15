@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3560216728052694910}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -57,7 +57,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 535577870507685168, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_Name
-      value: ItemPile (4) Variant
+      value: RockItemPile
       objectReference: {fileID: 0}
     - target: {fileID: 1441911461169076048, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: _itemList.Array.size
@@ -85,7 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2704604089103476842, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2704604089103476842, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_LocalRotation.w

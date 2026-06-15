@@ -83,7 +83,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 535577870507685168, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_Name
-      value: ItemPile (5) Variant
+      value: Rail
       objectReference: {fileID: 0}
     - target: {fileID: 1441911461169076048, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: _itemList.Array.size
@@ -103,15 +103,15 @@ PrefabInstance:
       objectReference: {fileID: 3387302511317601543}
     - target: {fileID: 2704604089103476842, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2704604089103476842, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2704604089103476842, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2704604089103476842, guid: 776fa6ee427bbec4cae0841f082a67fc, type: 3}
       propertyPath: m_LocalRotation.w

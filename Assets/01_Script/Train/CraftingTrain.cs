@@ -22,9 +22,6 @@ namespace _01_Script.Train
         [SerializeField] private int _maxWoodCount = 5;
         [SerializeField] private int _maxRockCount = 5;
         
-        public ItemParent woodItem;
-        public ItemParent rockItem;
-        
         private Stack<ItemParent> woodItems = new Stack<ItemParent>();
         private Stack<ItemParent> rockItems = new Stack<ItemParent>();
         private bool isMaking = false;
@@ -34,19 +31,6 @@ namespace _01_Script.Train
         private void Start()
         {
             ObjPositionManager.Instance.AddItemPosition(this.gameObject.transform);
-        }
-
-        [ContextMenu("WoodAdd")]
-        private void WoodAdd()
-        {
-            ResourceAdd(woodItem);
-            ResourceAdd(rockItem);
-        }
-
-        [ContextMenu("RockAdd")]
-        private void RockAdd()
-        {
-            ResourceAdd(rockItem);
         }
         
         public void ResourceAdd(ItemParent resourceItem)

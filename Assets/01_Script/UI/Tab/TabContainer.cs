@@ -9,7 +9,7 @@ namespace _01_Script.UI.Tab
     public class TabContainer : MonoBehaviour
     {
         [SerializeField] private Tab[] tabs;
-        [SerializeField] private GameObject[] contents;
+        [SerializeField] private CanvasGroup[] contents;
 
         private void Start()
         {
@@ -17,14 +17,7 @@ namespace _01_Script.UI.Tab
             {
                 int index = i;
                 tabs[i].AddEvent(EventTriggerType.PointerClick, () => ShowTab(index));
-                if (contents[i].TryGetComponent(out CanvasGroup canvasGroup))
-                {
-                    canvasGroup.alpha = 0;
-                }
-                else
-                {
-                    contents[i].SetActive(false);
-                }
+                contents[i].alpha = 0;
             }
             ShowTab(0);
         }
@@ -33,15 +26,8 @@ namespace _01_Script.UI.Tab
         {
             for (int i = 0; i < contents.Length; i++)
             {
-                if (contents[i].TryGetComponent(out CanvasGroup canvasGroup))
-                {
-                    bool isActive = i == index;
-                    canvasGroup.alpha = isActive ? 1 : 0;
-                }
-                else
-                {
-                    contents[i].SetActive(i == index);
-                }
+                bool isActive = (i == index);
+                contents[i].alpha = isActive ? 1 : 0;
             }
         }
     }

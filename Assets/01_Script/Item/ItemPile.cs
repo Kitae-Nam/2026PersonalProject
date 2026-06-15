@@ -16,6 +16,8 @@ namespace _01_Script.Item
         [SerializeField] private List<ItemParent> _itemList;
 
         [SerializeField] private ItemParent[] _toPushDirectlyItem;
+        
+        private BoxCollider _boxCollider;
         public int count => itemStack.Count;
         public bool canStack = true;
 
@@ -26,6 +28,7 @@ namespace _01_Script.Item
                 itemStack.Push(item);
             }
 
+            _boxCollider = GetComponent<BoxCollider>();
             if (ObjPositionManager.Instance == null) return;
             ObjPositionManager.Instance.AddItemPosition(gameObject.transform);
         }
@@ -110,10 +113,12 @@ namespace _01_Script.Item
 
         public void OnPop()
         {
+            _boxCollider.isTrigger = true;
         }
 
         public void OnPush()
         {
+            _boxCollider.isTrigger = false;
         }
 
         public bool CanReceive(ItemType itemType, MaterialType materialType, EquipmentType equipmentType)
