@@ -69,7 +69,6 @@ namespace _01_Script.Item
                 if (sender != null)
                 {
                     _triggerSender = sender;
-                    Debug.Log(collision.gameObject.name);
                 }
                 
                 if(IsCarryItem)

@@ -1,0 +1,8 @@
+# Made in Blockbench 5.1.4
+newmtl m_69489b9f-f440-a4d6-9bd5-3c67a3fb19af
+map_Kd Train1_Top_Texture.png
+newmtl m_484efce4-b148-c43d-a84b-c44505be50fc
+map_Kd Train1_Wheel_Texture.png
+newmtl m_15b53fe9-4632-dd38-a2dc-9faf06905f12
+map_Kd Train1_Middle_Texture.png
+newmtl none
