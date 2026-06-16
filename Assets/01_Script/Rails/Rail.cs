@@ -34,6 +34,8 @@ namespace _01_Script.Rails
         private int _rememberBit = 0b0000;
         private int _count;
         private bool _isFirstRail = false;
+        private bool _pendingFix = false;
+        
         private SplineContainer _currentSpline;
         public SplineContainer CurrentSpline => _currentSpline;
 
@@ -107,6 +109,10 @@ namespace _01_Script.Rails
             yield return null;
             UpdateRailDirection();
             NotifyNearbyRails();
+            CommitFix();
+            
+            if (isConnected)
+                SetTrue();
         }
 
         private void UpdateRailDirection()
@@ -115,17 +121,13 @@ namespace _01_Script.Rails
             for (int i = 0; i < 4; i++)
             {
                 worldDir = transform.TransformDirection(_directions[i]);
-                bool isHit = Physics.Raycast(transform.position, worldDir, out var hit, maxDistance,
-                    railMask);
-                if (isHit)
+                bool isHit = Physics.Raycast(transform.position, worldDir, out var hit, maxDistance, railMask);
+                if (isHit && hit.collider.TryGetComponent<Rail>(out var rail))
                 {
-                    if (hit.collider.TryGetComponent<Rail>(out var rail))
+                    if (rail.isConnected && rail.isFixedShape == false)
                     {
-                        if (rail.isConnected && rail.isFixedShape == false)
-                        {
-                            isConnected = true;
-                            _bit = (byte)(_bit | (1 << i));     // 상 하 좌 우 = 0001 0010 0100 1000
-                        }
+                        isConnected = true;
+                        _bit = (byte)(_bit | (1 << i));
                     }
                 }
             }
@@ -134,18 +136,18 @@ namespace _01_Script.Rails
             if (_count >= 2)
             {
                 _rememberBit = 0;
-               
-                //ChangeShape(_bit);
-                SetDirection();
+                ChangeShape(_bit);
+                _pendingFix = true;
             }
-            
+
             if (_count == 1)
             {
                 if (_rememberBit != 0)
                 {
                     _bit = _bit | _rememberBit;
                     CountBit(_bit);
-                    SetDirection();
+                    ChangeShape(_bit);
+                    _pendingFix = true;
                 }
                 else
                 {
@@ -154,7 +156,7 @@ namespace _01_Script.Rails
                 }
 
                 if (_isFirstRail)
-                    isFixedShape = true;
+                    _pendingFix = true;
             }
         }
 
@@ -169,12 +171,14 @@ namespace _01_Script.Rails
                 }
             }
         }
-        private void SetDirection()
+        public void CommitFix()
         {
+            if (!_pendingFix || isFixedShape) return;
+            _pendingFix = false;
+
             canUpdate = false;
             _collider.isTrigger = true;
             isCanCarry = false;
-            ChangeShape(_bit);
             isFixedShape = true;
         }
         private void ChangeShape(int bit)
@@ -190,23 +194,28 @@ namespace _01_Script.Rails
 
         private void NotifyNearbyRails()
         {
+            var neighbors = new List<Rail>(4);
+
             for (int i = 0; i < 4; i++)
             {
                 worldDir = transform.TransformDirection(_directions[i]);
-                if (Physics.Raycast(transform.position, worldDir, out var hit, maxDistance,
-                        railMask))
-                {
-                    if (hit.collider.TryGetComponent<Rail>(out var rail))
-                    {
-                        rail.UpdateRailDirection();
-                        if (rail.isConnected)
-                        {
-                            rail.SetTrue();
-                            this.SetTrue();
-                            Debug.Log(hit.collider.name);
-                        }
-                    }
-                }
+                if (!Physics.Raycast(transform.position, worldDir, out var hit, maxDistance, railMask))
+                    continue;
+                if (!hit.collider.TryGetComponent<Rail>(out var rail)) continue;
+                if (!rail.isConnected) continue;
+
+                neighbors.Add(rail);
+            }
+
+            foreach (var rail in neighbors)
+                rail.UpdateRailDirection();
+
+            foreach (var rail in neighbors)
+            {
+                rail.CommitFix();
+                rail.SetTrue();
+                this.SetTrue();
+                Debug.Log(rail.name);
             }
         }
 
