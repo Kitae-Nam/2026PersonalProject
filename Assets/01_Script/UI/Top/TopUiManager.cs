@@ -1,6 +1,7 @@
 using System;
 using _01_Script.Event;
 using _01_Script.Train;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -17,6 +18,17 @@ namespace _01_Script.UI.Top
         [SerializeField] private TextMeshProUGUI trainDistanceTxt;
         [SerializeField] private Image processImage;
         [SerializeField] private Image positionImage;
+        [SerializeField] private Image trainImage;
+
+        [SerializeField] private float posSpeed;
+        [SerializeField] private float posDistance;
+        [SerializeField] private float trainDistance;
+        [SerializeField] private float trainSpeedMultiple;
+        private float _trainSpeed;
+        private Vector2 _startPosPosition;
+        private Vector2 _startTrainPosition;
+        private float _yOffset;
+        private float _yOffset2;
 
         private Transform _stationTransform;
         private Transform CurrentTrainTransform => GameManager.Instance.engineTrain.transform;
@@ -38,10 +50,13 @@ namespace _01_Script.UI.Top
                 trainEventSo.OnStationChange += StationChange;
             }
             SpeedUiUpdate(trainInfoSo.speed);
+            _trainSpeed = trainInfoSo.speed *trainSpeedMultiple;
             _stationTransform = GameManager.Instance.station.transform;
             _startXPosition = CurrentTrainTransform.position.x;
 
             _startDistanceX = Mathf.Abs(_stationTransform.position.x - _startXPosition);
+            _startPosPosition = positionImage.rectTransform.localPosition;
+            _startTrainPosition = trainImage.rectTransform.localPosition;
         }
 
         private void StationChange(Transform obj)
@@ -53,6 +68,15 @@ namespace _01_Script.UI.Top
         {
             string result = obj.ToString("F2");
             trainSpeedTxt.text = $"{result}ms";
+            _trainSpeed = trainInfoSo.speed * trainSpeedMultiple;
+        }
+
+        private void Update()
+        {
+            _yOffset = Mathf.Sin(Time.time * posSpeed) * posDistance;
+            _yOffset2 = Mathf.Sin(Time.time * _trainSpeed) * trainDistance;
+            positionImage.rectTransform.localPosition = new Vector2(_startPosPosition.x, _startPosPosition.y + _yOffset);
+            trainImage.rectTransform.localPosition = new Vector2(_startTrainPosition.x, _startTrainPosition.y + _yOffset2);
         }
 
         private void LateUpdate()
