@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _01_Script.Train;
+using TMPro;
 using UnityEngine;
 
 namespace _01_Script.Managers
@@ -13,7 +14,10 @@ namespace _01_Script.Managers
         [SerializeField] private List<float> carSpacing = new List<float>();
         [SerializeField] private float recordStep = 0.05f;
         [SerializeField] private float teleportThreshold = 3f;
+        [SerializeField] private GameObject count;
+        [SerializeField] private TextMeshProUGUI countTimeTxt;
         [SerializeField] private float startTime = 5f;
+        [SerializeField] private ParticleSystem trainParticles;
  
         private struct TrailSample
         {
@@ -48,8 +52,14 @@ namespace _01_Script.Managers
 
         private IEnumerator RailMoveStart()
         {
-            yield return new WaitForSeconds(startTime);
+            for (int i = 0; i < startTime; i++)
+            {
+                countTimeTxt.text = $"{startTime - i}";
+                yield return new WaitForSeconds(1);
+            }
             head.TrainMoveCalculate();
+            count.SetActive(false);
+            trainParticles.Play();
         }
 
         private void SeedTrail()
