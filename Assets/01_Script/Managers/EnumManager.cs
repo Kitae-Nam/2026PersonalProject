@@ -15,6 +15,7 @@ public enum ItemType
     None,
     Material,
     Equipment,
+    Rail,
 }
 public enum MaterialType
 {

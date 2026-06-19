@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca3aecf3a42dd24290cee35236b3f9b, type: 3}
   m_Name: Rail
   m_EditorClassIdentifier: 
-  itemType: 0
+  itemType: 3
   materialType: 0
   equipmentType: 0
   itemCarryPos: {x: 0, y: -0.25, z: 0}

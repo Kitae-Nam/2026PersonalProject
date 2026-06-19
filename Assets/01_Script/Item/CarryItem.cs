@@ -7,6 +7,7 @@ using _01_Script.Managers;
 using _01_Script.Player;
 using _01_Script.Pool;
 using _01_Script.Train;
+using _01_Script.UI.Bottom;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -17,7 +18,7 @@ namespace _01_Script.Item
     public class CarryItem : MonoBehaviour
     {
         [SerializeField] private PlayerAnimationEventSo playerAnimationEvent;
-        
+        [SerializeField] private BottomUiChangeSo bottomUiChange;
         [SerializeField] private String ItemPileName;
 
         [SerializeField] private LayerMask _itemPileLayers;
@@ -346,6 +347,22 @@ namespace _01_Script.Item
             itemParent.transform.localPosition = pos;
             itemParent.transform.localRotation = _itemStack.Peek().itemSo.carryRotation;
         }
+        private void RefreshInventoryUi()
+        {
+            bool isRail = _currentCarryItemType == ItemType.Rail;
+
+            InventoryItem info = new InventoryItem
+            {
+                ItemType = _currentCarryItemType,
+                MaterialType = _currentCarryMaterialType,
+                EquipmentType = _currentCarryEquipmentType,
+                RailCount = isRail ? CurrentCarryCount : 0,
+                MaterialCount = isRail ? 0 : CurrentCarryCount,
+            };
+
+            Debug.Log("dd");
+            bottomUiChange.InventoryChangedInvoke(info);
+        }
         private void RefreshCarryContext()
         {
             HandType context = HandType.None;
@@ -357,7 +374,8 @@ namespace _01_Script.Item
                     : HandType.Holding;
             }
 
-            playerAnimationEvent.OnContextChangeInvoke(context);;
+            playerAnimationEvent.OnContextChangeInvoke(context);
+            RefreshInventoryUi();
         }
         private void OnDrawGizmos()
         {
