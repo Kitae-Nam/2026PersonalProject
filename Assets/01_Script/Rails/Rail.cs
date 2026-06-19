@@ -13,13 +13,13 @@ namespace _01_Script.Rails
 {
     public class Rail : ItemParent
     {
-        [Inject] [SerializeField] private RailManager railManager;
+         [Inject] [SerializeField] private RailManager railManager;
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject[] railArr;
 
-        [SerializeField] private float maxDistance = 2f;
+        [SerializeField] private float cellSize = 2f;
+        [SerializeField] private float searchRadius = 0.5f;
         [SerializeField] private Vector3 offset = new Vector3(0f, 1f, 0f);
-        [SerializeField] private LayerMask railMask;
 
         public bool isConnected;
         public bool isFixedShape = false;
@@ -29,13 +29,12 @@ namespace _01_Script.Rails
         private Collider _collider;
         private bool canUpdate = true;
         private readonly Vector3[] _directions = { Vector3.forward, Vector3.back, Vector3.right, Vector3.left };
-        private Vector3 worldDir;
         private int _bit = 0b0000;
         private int _rememberBit = 0b0000;
         private int _count;
         private bool _isFirstRail = false;
         private bool _pendingFix = false;
-        
+
         private SplineContainer _currentSpline;
         public SplineContainer CurrentSpline => _currentSpline;
 
@@ -74,11 +73,19 @@ namespace _01_Script.Rails
                 GetComponentInParent<ItemPile>().canStack = false;
             }
             _currentSpline = GetComponentInChildren<SplineContainer>();
+
+            RailPositionManager.Instance.Register(this);
+        }
+
+        private void OnDestroy()
+        {
+            if (RailPositionManager.Instance != null)
+                RailPositionManager.Instance.Unregister(this);
         }
 
         public override void CarredItem()
         {
-            
+
         }
 
         public override void DropedItem()
@@ -90,15 +97,15 @@ namespace _01_Script.Rails
         public void SetTrue()
         {
             railManager.RailAdd(this);
-            
+
             if (isConnected && !isCanCarry) return;
-            
+
             isConnected = true;
             isCanCarry = false;
-            if(_isFirstRail)
+            if (_isFirstRail)
                 _collider.isTrigger = true;
             var itemPile = GetComponentInParent<ItemPile>();
-            if(itemPile)
+            if (itemPile)
                 itemPile.canStack = false;
         }
 
@@ -107,12 +114,25 @@ namespace _01_Script.Rails
             yield return null;
             yield return new WaitForEndOfFrame();
             yield return null;
+
             UpdateRailDirection();
-            NotifyNearbyRails();
-            CommitFix();
             
             if (isConnected)
+            {
                 SetTrue();
+            }
+            NotifyNearbyRails();
+
+            CommitFix();
+
+        }
+
+        private bool TryFindNeighbor(int dirIndex, out Rail neighbor)
+        {
+            Vector3 dir = transform.TransformDirection(_directions[dirIndex]);
+            Vector3 target = transform.position + dir * cellSize;
+            neighbor = RailPositionManager.Instance.GetAt(target, searchRadius, this);
+            return neighbor != null;
         }
 
         private void UpdateRailDirection()
@@ -120,15 +140,12 @@ namespace _01_Script.Rails
             _bit = 0b0000;
             for (int i = 0; i < 4; i++)
             {
-                worldDir = transform.TransformDirection(_directions[i]);
-                bool isHit = Physics.Raycast(transform.position, worldDir, out var hit, maxDistance, railMask);
-                if (isHit && hit.collider.TryGetComponent<Rail>(out var rail))
+                if (!TryFindNeighbor(i, out var rail)) continue;
+
+                if (rail.isConnected && rail.isFixedShape == false)
                 {
-                    if (rail.isConnected && rail.isFixedShape == false)
-                    {
-                        isConnected = true;
-                        _bit = (byte)(_bit | (1 << i));
-                    }
+                    isConnected = true;
+                    _bit = (byte)(_bit | (1 << i));
                 }
             }
 
@@ -171,6 +188,7 @@ namespace _01_Script.Rails
                 }
             }
         }
+
         public void CommitFix()
         {
             if (!_pendingFix || isFixedShape) return;
@@ -181,6 +199,7 @@ namespace _01_Script.Rails
             isCanCarry = false;
             isFixedShape = true;
         }
+
         private void ChangeShape(int bit)
         {
             if (isFixedShape) return;
@@ -188,7 +207,7 @@ namespace _01_Script.Rails
 
             foreach (var rail in railArr) rail.SetActive(false);
             railArr[index].SetActive(true);
-            
+
             _currentSpline = GetComponentInChildren<SplineContainer>();
         }
 
@@ -198,10 +217,7 @@ namespace _01_Script.Rails
 
             for (int i = 0; i < 4; i++)
             {
-                worldDir = transform.TransformDirection(_directions[i]);
-                if (!Physics.Raycast(transform.position, worldDir, out var hit, maxDistance, railMask))
-                    continue;
-                if (!hit.collider.TryGetComponent<Rail>(out var rail)) continue;
+                if (!TryFindNeighbor(i, out var rail)) continue;
                 if (!rail.isConnected) continue;
 
                 neighbors.Add(rail);
@@ -214,21 +230,18 @@ namespace _01_Script.Rails
             {
                 rail.CommitFix();
                 rail.SetTrue();
-                this.SetTrue();
-                Debug.Log(rail.name);
             }
         }
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.forward * maxDistance + transform.position );
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, -transform.forward * maxDistance + transform.position);
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, transform.right * maxDistance + transform.position);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, -transform.right * maxDistance + transform.position);
+            Gizmos.color = Color.cyan;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 dir = transform.TransformDirection(_directions[i]);
+                Vector3 target = transform.position + dir * cellSize;
+                Gizmos.DrawWireSphere(target, searchRadius);
+            }
         }
     }
 }

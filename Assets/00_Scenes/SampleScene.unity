@@ -31212,6 +31212,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3263860968825397924, guid: 9f7b95b88f14818408cc78328a4b0d19, type: 3}
+      propertyPath: detectBoxHalfExtents.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8862598764591387580, guid: 9f7b95b88f14818408cc78328a4b0d19, type: 3}
       propertyPath: m_Name
       value: 3
@@ -74861,6 +74865,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2104705704}
   - component: {fileID: 2104705705}
+  - component: {fileID: 2104705706}
   m_Layer: 0
   m_Name: ObjPosManager
   m_TagString: Untagged
@@ -74897,6 +74902,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemObjPosition: []
   _harvestableObjPosition: []
+--- !u!114 &2104705706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104705703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b08a776aacc457595f0cb582f2f0bc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Managers.RailPositionManager
 --- !u!1 &2105605929
 GameObject:
   m_ObjectHideFlags: 0
@@ -78021,6 +78038,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 739368127}
     m_Modifications:
+    - target: {fileID: 1560196598758549580, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6615372261620417956, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1
@@ -78068,6 +78089,18 @@ PrefabInstance:
     - target: {fileID: 7592887992049129942, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
       propertyPath: isFixedShape
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7592887992049129942, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
+      propertyPath: detectBoxHalfExtents.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7592887992049129942, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
+      propertyPath: detectBoxHalfExtents.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7592887992049129942, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
+      propertyPath: detectBoxHalfExtents.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7592887992049129942, guid: fdfafc69e0f5ec34e85e4cd20206f726, type: 3}
       propertyPath: <isCanCarry>k__BackingField

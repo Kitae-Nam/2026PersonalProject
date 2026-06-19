@@ -64,11 +64,15 @@ MonoBehaviour:
   - {fileID: 1703717078824047030}
   - {fileID: 8324398024523629574}
   maxDistance: 1.8
+  offset: {x: 0, y: 1, z: 0}
   railMask:
     serializedVersion: 2
     m_Bits: 1024
+  cellSize: 2
+  detectBoxHalfExtents: {x: 0.8, y: 0.8, z: 0.8}
   isConnected: 0
   isFixedShape: 0
+  isStationRail: 0
 --- !u!114 &6186595054610771491
 MonoBehaviour:
   m_ObjectHideFlags: 0

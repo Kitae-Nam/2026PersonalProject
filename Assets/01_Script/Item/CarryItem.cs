@@ -360,7 +360,6 @@ namespace _01_Script.Item
                 MaterialCount = isRail ? 0 : CurrentCarryCount,
             };
 
-            Debug.Log("dd");
             bottomUiChange.InventoryChangedInvoke(info);
         }
         private void RefreshCarryContext()
