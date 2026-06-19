@@ -7,12 +7,14 @@ using _01_Script.Item.Realtem;
 using _01_Script.Managers;
 using _01_Script.Pool;
 using _01_Script.Rails;
+using _01_Script.UI.Bottom;
 using UnityEngine;
 
 namespace _01_Script.Train
 {
     public class CraftingTrain : MonoBehaviour, ITrain, IItemReceiver
     {//todo: 일단 추가되면 위치 조정해주고 추가되었을때 레일 만들 수 있는지 확인하고 만들기
+        [SerializeField] private BottomUiChangeSo bottomUiChange;
         [SerializeField] private string railName;
         [SerializeField] private ContainerTrain railPoint;
         [SerializeField] private Transform woodPoint;
@@ -61,6 +63,12 @@ namespace _01_Script.Train
             _currentItem.itemGo.transform.position = PosEdit(resourceItem.itemSo.materialType);
             if(isMaking == false)
                 StartCoroutine(ResourceUpdate());
+            _currentItem.itemGo.transform.position = PosEdit(resourceItem.itemSo.materialType);
+
+            RefreshContainerUi();
+
+            if (isMaking == false)
+                StartCoroutine(ResourceUpdate());
         }
 
         private IEnumerator ResourceUpdate()
@@ -77,6 +85,8 @@ namespace _01_Script.Train
             //임시
             Destroy(woodItem.itemGo);
             Destroy(rockItem.itemGo);
+            
+            RefreshContainerUi();
 
             var rail = PoolManager.Instance.Spawn(railName, railPoint.transform.position, railPoint.transform.rotation);
             rail.transform.SetParent(railPoint.transform);
@@ -88,6 +98,14 @@ namespace _01_Script.Train
 
             yield return new WaitForSeconds(railMakingTime);
             StartCoroutine(ResourceUpdate());
+        }
+        private void RefreshContainerUi()
+        {
+            bottomUiChange.ContainerChangedInvoke(new ContainerItem
+            {
+                WoodCount = woodItems.Count,
+                StoneCount = rockItems.Count,
+            });
         }
 
         private Vector3 PosEdit(MaterialType materialType)
@@ -133,5 +151,6 @@ namespace _01_Script.Train
         {
             ResourceAdd(item);
         }
+        
     }
 }

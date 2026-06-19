@@ -1,0 +1,14 @@
+# Made in Blockbench 5.1.4
+newmtl m_387c8b86-fad2-0279-de81-dcf23bfb369a
+map_Kd Floor_texture.png
+newmtl m_59f9877f-47fe-f37c-5027-2bf74e8d3398
+map_Kd main_building.png
+newmtl m_0856db48-20ae-1404-987d-85afdfd6143a
+map_Kd chimney_texture.png
+newmtl m_588ead83-dc9c-8ea9-80b7-13eeb01f04f2
+map_Kd columns_texture.png
+newmtl m_f1931535-d587-f454-bd54-3ff30ceeb94d
+map_Kd roof_texture.png
+newmtl m_c41d2c1e-48ad-c416-7ba8-1ec53ce4fe6f
+map_Kd sign_texture.png
+newmtl none
