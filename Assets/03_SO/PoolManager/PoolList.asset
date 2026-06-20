@@ -13,15 +13,14 @@ MonoBehaviour:
   m_Name: PoolList
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolList
   pools:
+  - {fileID: 11400000, guid: 79fa4eb87a7eab14aa84c559032ba4af, type: 2}
   - {fileID: 11400000, guid: 1dd024f74ba61cb4a972c3435c9e4b94, type: 2}
-  - {fileID: 11400000, guid: ba9ff321455d55040a612bbdbc1ec9bc, type: 2}
+  - {fileID: 11400000, guid: f0b3e554018b91c4a829cbc56468ca27, type: 2}
+  - {fileID: 11400000, guid: a5f1e9f3caa14e347b9ae83738d93567, type: 2}
   - {fileID: 11400000, guid: eb85d4bb676ec6b4495d3f98f2118ca1, type: 2}
-  - {fileID: 11400000, guid: 138eaedcb9190b6479b5bc46842b2a2f, type: 2}
-  - {fileID: 11400000, guid: 3682f21c2ff95e74eb9ea5adecf2abdc, type: 2}
-  - {fileID: 11400000, guid: fca5f6e9efbd7014f9638bd325c54711, type: 2}
+  - {fileID: 11400000, guid: ba9ff321455d55040a612bbdbc1ec9bc, type: 2}
   - {fileID: 11400000, guid: 5ef66358563e340468419708741262d8, type: 2}
-  - {fileID: 11400000, guid: d5c72affe1ae37542816a60f730fb28f, type: 2}
-  - {fileID: 11400000, guid: 82b431b57fc47b947b385975587fc8c4, type: 2}
+  - {fileID: 11400000, guid: 138eaedcb9190b6479b5bc46842b2a2f, type: 2}
   - {fileID: 11400000, guid: f147f1653d4cb0344a1cbd4972a5b67d, type: 2}
   - {fileID: 11400000, guid: d8bf87e6aac26224eb8577d39a90b09b, type: 2}
   - {fileID: 11400000, guid: 15104c986d451ed41b08ea1c14b87886, type: 2}

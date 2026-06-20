@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolItem
   poolName: Tree1
   prefab: {fileID: 1367369655329367961, guid: fdaa47b58dd822441af63d8a0f625923, type: 3}
-  initialCount: 100
+  initialCount: 1000

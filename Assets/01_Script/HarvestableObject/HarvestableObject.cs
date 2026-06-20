@@ -12,6 +12,7 @@ namespace _01_Script.HarvestableObject
         [SerializeField] private float delay = 0.1f;
         [SerializeField] private string effectName;
         [SerializeField] private Transform point;
+        [SerializeField] private List<GameObject> objects;
         public int currentHarvestCount;
 
         [SerializeField] private List<Vector3> scales;
@@ -67,6 +68,14 @@ namespace _01_Script.HarvestableObject
 
         public void OnPop()
         {
+            int ran = Random.Range(0, objects.Count);
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if(i == ran)
+                    objects[ran].SetActive(true);
+                else
+                    objects[i].SetActive(false);
+            }
         }
 
         public void OnPush()

@@ -31,3 +31,9 @@ public enum EquipmentType
     Axe,
     Bucket,
 }
+
+public enum BiomeType
+{
+    Grass, 
+    Stone
+}

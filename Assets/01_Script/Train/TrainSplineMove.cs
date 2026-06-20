@@ -78,6 +78,34 @@ namespace _01_Script.Train
         private IEnumerator FollowSplineRoute(bool isReverse)
         {
             _totalLength = _currentSpline.GetLength();
+            
+            Vector3 splineStart = _currentSplineContainer.EvaluatePosition(isReverse ? 1f : 0f);
+            float gap = Vector3.Distance(transform.position, splineStart);
+
+            if (gap > 0.01f)
+            {
+                Vector3 fromPos = transform.position;
+                Quaternion fromRot = transform.rotation;
+
+                Vector3 startTangent = (Vector3)_currentSplineContainer.EvaluateTangent(isReverse ? 1f : 0f);
+                if (isReverse) startTangent = -startTangent;
+                Quaternion toRot = startTangent != Vector3.zero
+                    ? Quaternion.LookRotation(startTangent)
+                    : fromRot;
+
+                float travelled = 0f;
+                while (travelled < gap)
+                {
+                    if (trainSo.speed == 0) yield break;
+                    travelled += trainSo.speed * Time.deltaTime;
+                    float t = Mathf.Clamp01(travelled / gap);
+
+                    transform.position = Vector3.Lerp(fromPos, splineStart, t);
+                    transform.rotation = Quaternion.Slerp(fromRot, toRot, t);
+                    yield return null;
+                }
+            }
+            
             _distance = isReverse? _totalLength : 0;
             
             while (isReverse ? (_distance > 0f) : (_distance < _totalLength))

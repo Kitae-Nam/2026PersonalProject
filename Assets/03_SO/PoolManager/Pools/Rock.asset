@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Pool.PoolItem
   poolName: Rock1
   prefab: {fileID: 7845960308945327282, guid: 647946358d3c2e8499b06b839e7b0fd2, type: 3}
-  initialCount: 100
+  initialCount: 1000

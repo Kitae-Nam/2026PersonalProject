@@ -32,6 +32,7 @@ namespace _01_Script.Managers
         
         private float[] _offsets;
         private float TrainLength => _offsets[^1];
+        public float TotalDistance => _headTravelled;
  
         private void Start()
         {

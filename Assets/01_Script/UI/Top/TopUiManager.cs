@@ -1,5 +1,6 @@
 using System;
 using _01_Script.Event;
+using _01_Script.Managers;
 using _01_Script.Train;
 using DG.Tweening;
 using TMPro;
@@ -26,7 +27,7 @@ namespace _01_Script.UI.Top
         [SerializeField] private float trainSpeedMultiple;
         private float _trainSpeed;
         private Vector2 _startPosPosition;
-        private Vector2 _startTrainPosition;
+        public Vector2 _startTrainPosition;
         private float _yOffset;
         private float _yOffset2;
 
@@ -77,6 +78,8 @@ namespace _01_Script.UI.Top
             _yOffset2 = Mathf.Sin(Time.time * _trainSpeed) * trainDistance;
             positionImage.rectTransform.localPosition = new Vector2(_startPosPosition.x, _startPosPosition.y + _yOffset);
             trainImage.rectTransform.localPosition = new Vector2(_startTrainPosition.x, _startTrainPosition.y + _yOffset2);
+
+            trainDistanceTxt.text = $"{TrainManager.Instance.TotalDistance.ToString("F1")}m";
         }
 
         private void LateUpdate()
