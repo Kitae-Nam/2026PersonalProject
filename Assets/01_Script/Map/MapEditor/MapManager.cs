@@ -165,7 +165,7 @@ namespace _01_Script.Map.MapEditor
                     int bz = zMin + lz;
 
                     Vector3 blockPos = new Vector3(
-                        (bx + 0.5f) * BlockSize, groundY, bz * BlockSize);
+                        (bx) * BlockSize, groundY, bz * BlockSize);
 
                     // 돌 칸 아래는 stoneKey, 그 외는 grassKey
                     string groundKey = (c == CellType.Rock) ? stoneKey : grassKey;
