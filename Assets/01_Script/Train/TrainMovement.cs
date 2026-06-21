@@ -9,7 +9,7 @@ namespace _01_Script.Train
 {
     public class TrainMovement : MonoBehaviour
     {
-        [Inject] private RailManager _railManager;
+        private RailManager _railManager;
         [SerializeField] private float speed = 5f;
         [SerializeField] private float rotateSpeed = 5f;
         [SerializeField] private float rotatePoint = 0.25f;
@@ -31,7 +31,7 @@ namespace _01_Script.Train
         [ContextMenu("PosInit")]
         public void PosInit()
         {
-            gameObject.transform.position = _railManager.RailsList[0].transform.position;
+            gameObject.transform.position = RailManager.Instance.RailsList[0].transform.position;
             _canMove = true;
             _currentRailIndex = 0;
             TrainMoveStart();
@@ -42,16 +42,16 @@ namespace _01_Script.Train
             //todo : 현재 위치에서 다음 인덱스에 있는 레일로 일정하게 움직여야함
             //dotoween으로 하기엔 속도 조절이 어려움
             if (_canMove == false) return;
-            if (_railManager.GetNextRail(_currentRailIndex) == -1) return;
+            if (RailManager.Instance.GetNextRail(_currentRailIndex) == -1) return;
 
-            var target = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex)];
-            var nextTarget = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex + 1)];
+            var target = RailManager.Instance.RailsList[RailManager.Instance.GetNextRail(_currentRailIndex)];
+            var nextTarget = RailManager.Instance.RailsList[RailManager.Instance.GetNextRail(_currentRailIndex + 1)];
             bool isTurning = false;
 
             _currentPosition = transform.position;
             _nextPosition = target.transform.position;
             _nextPosition.y = _posY;
-            _nextNextPosition = _railManager.RailsList[_railManager.GetNextRail(_currentRailIndex + 1)].transform.position;
+            _nextNextPosition = RailManager.Instance.RailsList[RailManager.Instance.GetNextRail(_currentRailIndex + 1)].transform.position;
 
             _dirIn = (_nextPosition - _currentPosition).normalized;
             _dirOut = (nextTarget.transform.position - target.transform.position).normalized;

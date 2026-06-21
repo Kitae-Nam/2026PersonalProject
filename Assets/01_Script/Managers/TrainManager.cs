@@ -40,6 +40,29 @@ namespace _01_Script.Managers
             SeedTrail();
             StartCoroutine(RailMoveStart());
         }
+
+        public void Restart()
+        {
+            trainParticles.Stop();
+            StartCoroutine(RestartRoutine());
+        }
+
+        private IEnumerator RestartRoutine()
+        {
+            count.SetActive(true);
+            for (int i = 0; i < startTime; i++)
+            {
+                countTimeTxt.text = $"{startTime - i}";
+                yield return new WaitForSeconds(1);
+            }
+
+            head.TrainMoveCalculate();
+            count.SetActive(false);
+            trainParticles.Play();
+            
+            _lastHeadPos = head.transform.position;
+        }
+
         private void BuildOffsets()
         {
             _offsets = new float[cars.Count];

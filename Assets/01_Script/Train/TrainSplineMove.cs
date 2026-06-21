@@ -17,8 +17,8 @@ namespace _01_Script.Train
         public Transform trainPosition;
         public Transform trainRotation;
 
-        public event Action OnRailBroken;
-        public event Action OnRailStation;
+        public static event Action OnRailBroken;
+        public static event Action OnRailStation;
 
         [Inject] [SerializeField] private RailManager railManager;
         [SerializeField] private TrainInfoSo trainSo;
@@ -53,7 +53,6 @@ namespace _01_Script.Train
             if(!railManager) return;
             if (railManager.GetNextRail(_currentRailIndex) == -1)
             {
-                Debugging.Log("길 끊김");
                 OnRailBroken?.Invoke();
                 return;
             }
@@ -143,7 +142,6 @@ namespace _01_Script.Train
                 trainPosition.position = _targetPosition;
                 yield return null;
             }
-            Debugging.Log($"레일 {_currentRailIndex}번째 다 이동함");
             OnPathComplete();
         }
 
@@ -153,7 +151,6 @@ namespace _01_Script.Train
 
             if (currentRail.isStationRail) 
             {
-                Debugging.Log("정거장 도착");
                 OnRailStation?.Invoke();
                 return;
             }

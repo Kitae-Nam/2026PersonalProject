@@ -19,7 +19,7 @@ namespace _01_Script.Train
         [SerializeField] private ContainerTrain railPoint;
         [SerializeField] private Transform woodPoint;
         [SerializeField] private Transform rockPoint;
-        [SerializeField] private float railMakingTime;
+        public float railMakingTime;
         
         [SerializeField] private int _maxWoodCount = 5;
         [SerializeField] private int _maxRockCount = 5;
@@ -34,7 +34,6 @@ namespace _01_Script.Train
         {
             ObjPositionManager.Instance.AddItemPosition(this.gameObject.transform);
         }
-        
         public void ResourceAdd(ItemParent resourceItem)
         {
             if (resourceItem == null) return;
@@ -131,7 +130,7 @@ namespace _01_Script.Train
                 }
                 else
                 {
-                    return rockPoint.position + _currentItem.itemSo.onGroundAdditionalPos * (rockItems.Count -1);
+                    return rockPoint.position + _currentItem.itemSo.onGroundPos + _currentItem.itemSo.onGroundAdditionalPos;
                 }
             }
         }
@@ -139,10 +138,10 @@ namespace _01_Script.Train
         public bool CanReceive(ItemType itemType, MaterialType materialType, EquipmentType equipmentType)
         {
             if (materialType == MaterialType.Wood)
-                return woodItems.Count < _maxWoodCount;
+                return true; /*woodItems.Count < _maxWoodCount;*/
 
             if (materialType == MaterialType.Rock)
-                return rockItems.Count < _maxRockCount;
+                return true;/*rockItems.Count < _maxRockCount;*/
 
             return false;
         }

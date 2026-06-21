@@ -13,7 +13,7 @@ namespace _01_Script.Rails
 {
     public class Rail : ItemParent
     {
-         [Inject] [SerializeField] private RailManager railManager;
+        [SerializeField] private RailManager railManager;
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject[] railArr;
 
@@ -62,7 +62,7 @@ namespace _01_Script.Rails
         {
             if (isConnected)
             {
-                railManager.RailAdd(this);
+                RailManager.Instance.RailAdd(this);
                 _isFirstRail = true;
                 GetComponentInParent<ItemPile>().canStack = false;
             }
@@ -96,7 +96,7 @@ namespace _01_Script.Rails
         [ContextMenu("Update")]
         public void SetTrue()
         {
-            railManager.RailAdd(this);
+            RailManager.Instance.RailAdd(this);
 
             if (isConnected && !isCanCarry) return;
 

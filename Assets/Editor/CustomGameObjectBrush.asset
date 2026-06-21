@@ -12,8 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e2970ff9fc9ce4c875293331827273, type: 3}
   m_Name: CustomGameObjectBrush
   m_EditorClassIdentifier: 
-  m_Cells: []
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Cells:
+  - m_GameObject: {fileID: 7132478463685004455, guid: e803f86c29d358241989f38373916555, type: 3}
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 0, y: 0, z: 0}
+    m_Orientation: {x: 0, y: 0, z: 0, w: 0}
+  - m_GameObject: {fileID: 4247011741105131921, guid: 91f9fa8d130f78645a166792f33cc416, type: 3}
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 0, y: 0, z: 0}
+    m_Orientation: {x: 0, y: 0, z: 0, w: 0}
+  - m_GameObject: {fileID: 6679389291184419620, guid: eb778829555aeac42bdb994bdf11b43b, type: 3}
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 0, y: 0, z: 0}
+    m_Orientation: {x: 0, y: 0, z: 0, w: 0}
+  - m_GameObject: {fileID: 4132667904923982555, guid: 1f031ec394116e94984ce70c2791a7ea, type: 3}
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 0, y: 0, z: 0}
+    m_Orientation: {x: 0, y: 0, z: 0, w: 0}
+  - m_GameObject: {fileID: 4867868694476074372, guid: 16b1055cc2662b94fa688ae2e7eb0bb8, type: 3}
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 0, y: 0, z: 0}
+    m_Orientation: {x: 0, y: 0, z: 0, w: 0}
+  - m_GameObject: {fileID: 5791871720697051408, guid: 877cc70c0bec91949b961d8af438f3bf, type: 3}
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 0, y: 0, z: 0}
+    m_Orientation: {x: 0, y: 0, z: 0, w: 0}
+  m_Size: {x: 2, y: 2, z: 1}
   m_Pivot: {x: 0, y: 1, z: 0}
   m_CanChangeZPosition: 0
   hiddenGridLayout:
@@ -27,4 +51,6 @@ MonoBehaviour:
   - {fileID: 7132478463685004455, guid: e803f86c29d358241989f38373916555, type: 3}
   - {fileID: 4247011741105131921, guid: 91f9fa8d130f78645a166792f33cc416, type: 3}
   - {fileID: 6679389291184419620, guid: eb778829555aeac42bdb994bdf11b43b, type: 3}
-  - {fileID: 7132478463685004455, guid: e803f86c29d358241989f38373916555, type: 3}
+  - {fileID: 4132667904923982555, guid: 1f031ec394116e94984ce70c2791a7ea, type: 3}
+  - {fileID: 4867868694476074372, guid: 16b1055cc2662b94fa688ae2e7eb0bb8, type: 3}
+  - {fileID: 4867868694476074372, guid: 16b1055cc2662b94fa688ae2e7eb0bb8, type: 3}

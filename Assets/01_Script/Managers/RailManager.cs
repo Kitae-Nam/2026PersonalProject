@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _01_Script.Managers
 {
-    public class RailManager : MonoBehaviour, IInstaller
+    public class RailManager : MonoSingleton<RailManager>
     {
         private readonly List<Rail> _railsList = new List<Rail>();
         
@@ -31,10 +31,6 @@ namespace _01_Script.Managers
         {
             if(index >= RailsList.Count) return -1;
             return index + 1;
-        }
-        public void InstallBindings(ContainerBuilder containerBuilder)
-        {
-            containerBuilder.RegisterValue(this);
         }
     }
 }

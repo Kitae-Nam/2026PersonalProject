@@ -30,7 +30,7 @@ namespace _01_Script.HarvestableObject
         public virtual IEnumerator Harvest()
         {
             if (currentHarvestCount == 0) yield break;
-            --currentHarvestCount;
+            currentHarvestCount -= harvestableSo.hitCount;
             Debug.Log("아야");
 
             if (currentHarvestCount <= 0)

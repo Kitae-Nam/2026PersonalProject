@@ -41,7 +41,7 @@ namespace _01_Script.Map.MapEditor
         [SerializeField] private float resourceY    = 0f;
  
         [Header("맵 구성")]
-        [SerializeField] private int  fieldChunkCount = 4;
+        public int  fieldChunkCount = 4;
         [SerializeField] private int  seed            = 12345;
         [SerializeField] private bool randomSeed      = false;
  
@@ -90,6 +90,7 @@ namespace _01_Script.Map.MapEditor
  
         private int _cursorBX;
         private int _baseBX;
+        private PlacedTile _lastStationTile;
  
         private void Start()
         {
@@ -123,8 +124,8 @@ namespace _01_Script.Map.MapEditor
         // 역 도착 시 외부 이벤트에서 호출
         public void OnReachStation()
         {
-            AppendSegment();
-            CleanupBehind();
+            AppendSegment();   // 다음 [필드 N + 역] 을 _cursorBX 이어서 생성
+            CleanupBehind();   // 뒤처진 것만 정리 (플레이어/현재역 청크는 보호)
             RebuildWalls();
         }
  
@@ -149,14 +150,18 @@ namespace _01_Script.Map.MapEditor
             if (player == null) return;
             int playerBX = Mathf.FloorToInt(player.position.x / BlockSize);
             int cutoff = playerBX - despawnBehindBlocks;
- 
+
             for (int i = _tiles.Count - 1; i >= 0; i--)
             {
                 PlacedTile t = _tiles[i];
- 
+
+                // 플레이어가 올라가 있는 타일 보호
                 bool playerOnTile = playerBX >= t.startBX && playerBX < t.endBX;
                 if (playerOnTile) continue;
- 
+
+                // ★ 현재(가장 최근) 역 청크 보호
+                if (t == _lastStationTile) continue;
+
                 if (t.endBX <= cutoff)
                 {
                     DespawnTile(t);
@@ -238,8 +243,8 @@ namespace _01_Script.Map.MapEditor
                         case CellType.Rock:
                             SpawnTop(rockKey, topPos, placed); break;
                         case CellType.Station:
-                            var st = SpawnTop(stationKey, topPos, placed);
-                            if (st != null) { placed.stationPos = topPos; placed.stationGo = st; }
+                            var st = SpawnTop(stationKey, topPos + new Vector3(0,0,0.5f), placed);
+                            if (st != null) { placed.stationPos = topPos+ new Vector3(0,0,0.5f); placed.stationGo = st; }
                             break;
                         default: break;
                     }
@@ -251,7 +256,7 @@ namespace _01_Script.Map.MapEditor
 
             if (isStation && placed.stationGo != null)
             {
-                Debug.Log("cc");
+                _lastStationTile = placed;
                 eventSo.OnStationChangeInvoke(placed.stationGo.transform);
             }
         }
@@ -345,10 +350,9 @@ namespace _01_Script.Map.MapEditor
  
         public void RegenerateMap()
         {
-            ClearMap();
-            if (randomSeed) seed = System.Environment.TickCount;
-            GenerateInitial();
-            BuildBoundaryWalls();
+            AppendSegment();
+            CleanupBehind();
+            RebuildWalls();
         }
     }
 }

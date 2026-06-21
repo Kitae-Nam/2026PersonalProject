@@ -6,6 +6,7 @@ namespace _01_Script.HarvestableObject
     public class HarvestableSo : ScriptableObject
     {
         public int harvestCount = 3;
+        public int hitCount = 1;
         public string harvestingName;
     }
 }

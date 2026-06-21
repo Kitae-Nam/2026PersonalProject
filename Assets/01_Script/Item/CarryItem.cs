@@ -26,7 +26,7 @@ namespace _01_Script.Item
         [SerializeField] private Vector3 _itemCarryOffset;
         [SerializeField] private Transform _itemCarryParent;
         [SerializeField] private float _pickUpDelay = 0.5f;
-        [SerializeField] private int _canCarryItemCount = 3;
+        public int _canCarryItemCount = 3;
         [field:SerializeField] private int CurrentCarryCount => _itemStack.Count;
 
         [SerializeField] private LayerMask _receiverLayers;
@@ -192,7 +192,6 @@ namespace _01_Script.Item
             }
             else
             {
-                Debugging.Log("itempile null");
             }
         }
 
