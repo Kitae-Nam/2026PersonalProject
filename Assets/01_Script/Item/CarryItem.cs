@@ -116,7 +116,7 @@ namespace _01_Script.Item
                 var receiver = other.GetComponentInParent<IItemReceiver>();
                 if (receiver != null && receiver == _triggerReceiver) _triggerReceiver = null;
             }
-            bool isSederLayer = (_receiverLayers.value & (1 << other.gameObject.layer)) != 0;
+            bool isSederLayer = (_senderLayers.value & (1 << other.gameObject.layer)) != 0;
             if (isSederLayer)
             {
                 var receiver = other.GetComponent<ISender>();
@@ -142,6 +142,7 @@ namespace _01_Script.Item
 
                 RefreshCarryContext();
                 _timer = 0f;
+                Debug.Log(IsCarryItem);
             }
         }
 
@@ -208,6 +209,10 @@ namespace _01_Script.Item
                         _triggerReceiver.Receive(item);
                         item.DropedItem();
                     }
+                    _itemStack.Clear();
+                    _currentCarryItemType = ItemType.None;
+                    _currentCarryMaterialType = MaterialType.None;
+                    _currentCarryEquipmentType = EquipmentType.None;
                 }
 
                 return;
@@ -264,7 +269,13 @@ namespace _01_Script.Item
                     _triggerReceiver.Receive(item);
                     item.DropedItem();
                 }
-
+                if (IsCarryItem == false)
+                {
+                    _itemStack.Clear();
+                    _currentCarryItemType = ItemType.None;
+                    _currentCarryMaterialType = MaterialType.None;
+                    _currentCarryEquipmentType = EquipmentType.None;
+                }
                 return;
             }
 
@@ -302,6 +313,7 @@ namespace _01_Script.Item
 
             if (IsCarryItem == false)
             {
+                _itemStack.Clear();
                 _currentCarryItemType = ItemType.None;
                 _currentCarryMaterialType = MaterialType.None;
                 _currentCarryEquipmentType = EquipmentType.None;
