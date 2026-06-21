@@ -31,7 +31,7 @@ namespace _01_Script.UI.Top
         private float _yOffset;
         private float _yOffset2;
 
-        private Transform _stationTransform;
+        private Transform _stationTransform => GameManager.Instance.station.transform;
         private Transform CurrentTrainTransform => GameManager.Instance.engineTrain.transform;
 
         private float _startDistanceX;
@@ -48,21 +48,14 @@ namespace _01_Script.UI.Top
             if (trainEventSo != null)
             {
                 trainEventSo.OnSpeedChange += SpeedUiUpdate;
-                trainEventSo.OnStationChange += StationChange;
             }
             SpeedUiUpdate(trainInfoSo.speed);
             _trainSpeed = trainInfoSo.speed *trainSpeedMultiple;
-            _stationTransform = GameManager.Instance.station.transform;
             _startXPosition = CurrentTrainTransform.position.x;
 
             _startDistanceX = Mathf.Abs(_stationTransform.position.x - _startXPosition);
             _startPosPosition = positionImage.rectTransform.localPosition;
             _startTrainPosition = trainImage.rectTransform.localPosition;
-        }
-
-        private void StationChange(Transform obj)
-        {
-            _stationTransform = GameManager.Instance.station.transform;
         }
 
         private void SpeedUiUpdate(float obj)

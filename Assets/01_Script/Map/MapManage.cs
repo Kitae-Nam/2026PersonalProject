@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _01_Script.Event;
 using _01_Script.Pool;
 using UnityEngine;
 
@@ -7,9 +8,10 @@ namespace _01_Script.Map
     public class MapManage : MonoBehaviour
     {
         [Header("참조")] 
+        [SerializeField] private TrainInfoChangeSo eventSo;
         [SerializeField] private PoolManager poolManager;
         [SerializeField] private Transform wallParent; // 벽 콜라이더를 담을 부모(없으면 자동 생성)
-        [SerializeField] private Transform   player;
+        [SerializeField] private Transform player;
 
         [Header("풀 키")] 
         [SerializeField] private string grassKey = "GrassBlock";
@@ -25,8 +27,10 @@ namespace _01_Script.Map
         [SerializeField] private float groundY = 0f;
         [SerializeField] private float resourceY = 0f;
 
-        [Header("맵 길이 (청크 수) — 인스펙터에서 조절")] 
-        public int totalChunks = 6; // 시작~정거장 포함 전체 청크 수
+        [Header("역 간격 (청크 수)")]
+        [SerializeField] private int stationInterval = 6;
+        [Header("뒤처진 청크 정리 기준")]
+        [SerializeField] private int despawnBehindChunks = 2;
 
         [Header("역 주변 자원 제거 반경 (블록 단위)")]
         [SerializeField] private int randomZ = 5;
@@ -63,6 +67,8 @@ namespace _01_Script.Map
         [SerializeField] private float persistence = 0.5f;  // 층마다 진폭 감소율
         [SerializeField] private float lacunarity  = 2f;    // 층마다 주파수 증가율
 
+        [SerializeField] private Vector3 resourceOffset = Vector3.zero;
+        
         // 플레이어 시작 블록 좌표 (Start에서 계산)
         private int _playerBlockX;
         private int _playerBlockZ;
@@ -77,10 +83,11 @@ namespace _01_Script.Map
         private int ZMin => -(depthBlocks / 2);
         private int ZMax => (depthBlocks - 1) / 2;
 
-        // 정거장은 마지막 청크
-        private int StationChunk => _baseChunk + (totalChunks - 1);
-
-        private readonly List<GameObject> _spawned = new();
+        private readonly Dictionary<int, List<GameObject>> _chunks = new();
+        private readonly HashSet<int> _stationChunks = new();
+        private int _lastStationChunk;
+        private int _generatedUntil;
+        
         private GameObject _wallRoot;
         private int _baseChunk; 
 
@@ -99,7 +106,7 @@ namespace _01_Script.Map
             }
             else { _baseChunk = 0; _playerBlockX = 0; _playerBlockZ = 0; }
             
-            GenerateMap();
+            GenerateInitial();
             BuildBoundaryWalls();
         }
 
@@ -122,19 +129,60 @@ namespace _01_Script.Map
         }
 
         // ── 맵 전체 1회 생성 ─────────────────────────────────────────────
-        private void GenerateMap()
+        private void GenerateInitial()
         {
             _gapSinceForest = 0;
             _gapSinceMine   = 0;
-            for (int i = 0; i < totalChunks; i++)
-                SpawnChunk(_baseChunk + i);
+
+            int firstStation = _baseChunk + stationInterval;
+            for (int cx = _baseChunk; cx <= firstStation; cx++)
+                SpawnChunk(cx, isStation: cx == firstStation);
+
+            _lastStationChunk = firstStation;
+            _generatedUntil   = firstStation;
+        }
+        
+        public void OnReachStation()
+        {
+            int nextStation = _lastStationChunk + stationInterval;
+            for (int cx = _generatedUntil + 1; cx <= nextStation; cx++)
+                SpawnChunk(cx, isStation: cx == nextStation);
+
+            _lastStationChunk = nextStation;
+            _generatedUntil   = nextStation;
+
+            CleanupBehind();
+            RebuildWalls();
         }
 
-        private void SpawnChunk(int chunkX)
+        private void CleanupBehind()
         {
-            
+            int playerChunk = GetPlayerChunk();
+            int cutoff = playerChunk - despawnBehindChunks;
+
+            var toRemove = new List<int>();
+            foreach (var kv in _chunks)
+            {
+                int cx = kv.Key;
+                if (cx >= cutoff) continue;
+                if (cx == playerChunk) continue; // 플레이어 청크는 절대 삭제 안 함
+                toRemove.Add(cx);
+            }
+            foreach (int cx in toRemove) DespawnChunk(cx);
+        }
+
+        private int GetPlayerChunk()
+        {
+            if (player == null) return _baseChunk;
+            return Mathf.FloorToInt(player.position.x / (chunkBlocks * BlockSize));
+        }
+
+        private void SpawnChunk(int chunkX, bool isStation)
+        {
+            if (_chunks.ContainsKey(chunkX)) return; // 중복 방지
+
+            var spawned = new List<GameObject>();
             int startBX = chunkX * chunkBlocks;
-            bool stationChunk = (chunkX == StationChunk);
             int stationCenterBX = startBX + chunkBlocks / 2;
 
             // 1) 이 청크의 바이옴 맵을 먼저 계산 (true = 광산/돌, false = 숲/잔디)
@@ -153,7 +201,7 @@ namespace _01_Script.Map
                 }
 
             // 2) 균형 보정: 한쪽이 maxGapChunks 넘게 안 나왔으면 강제로 패치 심기
-            if (balanceBiomes && !stationChunk)
+            if (!isStation)
             {
                 int totalCells   = chunkBlocks * zCount;
                 int minCells     = Mathf.CeilToInt(totalCells * minBiomeRatio);
@@ -191,13 +239,13 @@ namespace _01_Script.Map
                     bool isMine = isMineMap[lbx, zi];
 
                     Vector3 blockPos = new Vector3(
-                        (bx + 0.5f) * BlockSize, groundY, bz * BlockSize);
+                        (bx) * BlockSize + 0.5f, groundY, bz * BlockSize + 0.5f) + resourceOffset;
 
                     string groundKey =grassKey;
                     GameObject ground = poolManager.Spawn(groundKey, blockPos, Quaternion.identity);
-                    if (ground != null) { _spawned.Add(ground); }
+                    if (ground != null) { spawned.Add(ground); }
 
-                    bool nearStation = stationChunk
+                    bool nearStation = isStation
                                        && Mathf.Abs(bx - stationCenterBX) <= clearRadiusX
                                        && Mathf.Abs(bz)                   <= clearRadiusZ;
                     // 플레이어 시작 주변 반경 (추가)
@@ -212,17 +260,29 @@ namespace _01_Script.Map
                         Vector3 resPos = new Vector3(blockPos.x, resourceY, blockPos.z);
                         string resKey = isMine ? rockKey : treeKey;
                         GameObject res = poolManager.Spawn(resKey, resPos, Quaternion.identity);
-                        if (res != null) _spawned.Add(res);
+                        if (res != null) spawned.Add(res);
                     }
                 }
 
-            if (stationChunk)
+            if (isStation)
             {
                 Vector3 stationPos = new Vector3(
-                    (stationCenterBX + 0.5f) * BlockSize, resourceY, Random.Range(-randomZ, randomZ));
+                    (stationCenterBX) * BlockSize, resourceY, Random.Range(-randomZ, randomZ));
                 GameObject station = poolManager.Spawn(stationKey, stationPos, Quaternion.identity);
-                if (station != null) _spawned.Add(station);
+                if (station != null) spawned.Add(station);
+                _stationChunks.Add(chunkX);
+                eventSo.OnStationChangeInvoke(station.transform);
             }
+            _chunks[chunkX] = spawned;
+        }
+        private void DespawnChunk(int chunkX)
+        {
+            if (!_chunks.TryGetValue(chunkX, out var objs)) return;
+            foreach (var go in objs)
+                if (go != null) poolManager.Despawn(go);
+            objs.Clear();
+            _chunks.Remove(chunkX);
+            _stationChunks.Remove(chunkX);
         }
 
         // 바이옴 맵의 일부를 강제로 뒤집어 최소 minBlocks칸의 패치를 만든다.
@@ -281,20 +341,20 @@ namespace _01_Script.Map
             if (done.Contains((lbx, zi))) return;
             open.Add((lbx, zi));
         }
-
-        private float Perlin(int bx, int bz, float scale, int seed)
-        {
-            float nx = (bx + seed) * scale;
-            float nz = (bz + seed) * scale;
-            return Mathf.Clamp01(Mathf.PerlinNoise(nx, nz));
-        }
-
         // ── 맵 4면 경계 벽 (BoxCollider) ─────────────────────────────────
         private void BuildBoundaryWalls()
         {
-            // 맵 월드 범위 계산
-            float minX = _baseChunk * chunkBlocks * BlockSize;
-            float maxX = (_baseChunk + totalChunks) * chunkBlocks * BlockSize;
+            if (_chunks.Count == 0) return;
+
+            int minChunk = int.MaxValue, maxChunk = int.MinValue;
+            foreach (var cx in _chunks.Keys)
+            {
+                if (cx < minChunk) minChunk = cx;
+                if (cx > maxChunk) maxChunk = cx;
+            }
+
+            float minX = minChunk * chunkBlocks * BlockSize;
+            float maxX = (maxChunk + 1) * chunkBlocks * BlockSize;
             float minZ = (ZMin) * BlockSize - BlockSize * 0.5f;
             float maxZ = (ZMax) * BlockSize + BlockSize * 0.5f;
 
@@ -323,6 +383,11 @@ namespace _01_Script.Map
             CreateWall("Wall_Xmax", new Vector3(maxX + wallThickness * 0.5f, wallMidY, midZ),
                 new Vector3(wallThickness, wallHeight, lenZ));
         }
+        private void RebuildWalls()
+        {
+            if (_wallRoot != null) { Destroy(_wallRoot); _wallRoot = null; wallParent = null; }
+            BuildBoundaryWalls();
+        }
 
         private void CreateWall(string name, Vector3 center, Vector3 size)
         {
@@ -337,27 +402,20 @@ namespace _01_Script.Map
         public void ClearMap()
         {
             // 1) 스폰된 모든 오브젝트를 풀로 반환 (스케일 원복 후)
-            foreach (var go in _spawned)
-            {
-                if (go == null) continue;
-                poolManager.Despawn(go);
-            }
-            _spawned.Clear();
+            foreach (var kv in _chunks)
+            foreach (var go in kv.Value)
+                if (go != null) poolManager.Despawn(go);
+            _chunks.Clear();
+            _stationChunks.Clear();
 
-            // 2) 경계 벽 제거 (풀 오브젝트가 아니므로 Destroy)
-            if (_wallRoot != null)
-            {
-                Destroy(_wallRoot);
-                _wallRoot   = null;
-                wallParent  = null;        // 다음 BuildBoundaryWalls에서 새로 생성되도록
-            }
+            if (_wallRoot != null) { Destroy(_wallRoot); _wallRoot = null; wallParent = null; }
         }
 
 // ── 맵 리셋: 정리 후 재생성 (스테이지 전환 등에서 호출) ────────────
         public void RegenerateMap()
         {
             ClearMap();
-            GenerateMap();
+            GenerateInitial();
             BuildBoundaryWalls();
         }
     }

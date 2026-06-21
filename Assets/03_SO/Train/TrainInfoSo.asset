@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e667d61381e7486b8be9f5771119bfa8, type: 3}
   m_Name: TrainInfoSo
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Train.TrainInfoSo
-  speed: 1
+  speed: 0.5

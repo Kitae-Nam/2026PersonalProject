@@ -750,6 +750,7 @@ Transform:
   - {fileID: 1390024935}
   - {fileID: 560932911}
   - {fileID: 411138567}
+  - {fileID: 219824299}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &119645762
@@ -1586,7 +1587,7 @@ MonoBehaviour:
     ScreenPosition: {x: -0.1, y: -0.05}
     DeadZone:
       Enabled: 1
-      Size: {x: 0.05, y: 2}
+      Size: {x: 0.05, y: 0}
     HardLimits:
       Enabled: 0
       Size: {x: 1, y: 2}
@@ -1626,7 +1627,7 @@ MonoBehaviour:
     FieldOfView: 60.000004
     OrthographicSize: 12.7
     NearClipPlane: 0.3
-    FarClipPlane: 1000
+    FarClipPlane: 200
     Dutch: 0
     ModeOverride: 1
     PhysicalProperties:
@@ -1651,7 +1652,7 @@ Transform:
   m_GameObject: {fileID: 196470044}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3407186, y: 0.08189965, z: -0.029809028, w: 0.9361168}
-  m_LocalPosition: {x: -11.685371, y: 18.56075, z: -23.220255}
+  m_LocalPosition: {x: -11.685371, y: 18.56075, z: -23.220253}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1736,6 +1737,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 107760557}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &219824298
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 219824299}
+  - component: {fileID: 219824300}
+  m_Layer: 0
+  m_Name: ItemPileManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &219824299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 219824298}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 107760557}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &219824300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 219824298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aaf251426cc4a72acaab19a945b53d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Managers.ItemPileManager
+  itemPiles: []
 --- !u!1001 &236799892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2171,7 +2217,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 200
   field of view: 60.000004
   orthographic: 1
   orthographic size: 12.7
@@ -2199,7 +2245,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3407186, y: 0.08189965, z: -0.029809028, w: 0.9361168}
-  m_LocalPosition: {x: -11.685371, y: 18.56075, z: -23.220255}
+  m_LocalPosition: {x: -11.685371, y: 18.56075, z: -23.220253}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3480,7 +3526,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 867428897857691373, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 867428897857691373, guid: 0cc402b7b262cb14fa55005db2f802e5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3993,6 +4039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27656556ea448c541b77aed8cc36daff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_01_Script.Map.MapEditor.MapManager
+  eventSo: {fileID: 11400000, guid: eca9bb93d78e9404e8f44cd46155e288, type: 2}
   poolManager: {fileID: 0}
   player: {fileID: 4259422386166834356}
   wallParent: {fileID: 0}
@@ -4040,18 +4087,20 @@ MonoBehaviour:
   gridPerBlock: 4
   groundY: -2
   resourceY: 0
-  fieldChunkCount: 4
+  fieldChunkCount: 0
   seed: 12345
   randomSeed: 1
+  despawnBehindBlocks: 32
   mirrorChance: 0.5
   mirrorStart: 0
   mirrorStation: 0
   mirrorXChance: 0.5
-  avoidRecent: 3
+  avoidRecent: 1
   autoScaleGround: 0
   prefabBaseSize: 1
   wallHeight: 10
   wallThickness: 1
+  resourceOffset: {x: 1, y: 0, z: 1}
 --- !u!4 &560932911
 Transform:
   m_ObjectHideFlags: 0
@@ -4623,7 +4672,7 @@ MonoBehaviour:
   player: {fileID: 907956046}
   ItemPileParent: {fileID: 739368127}
   engineTrain: {fileID: 859123006}
-  station: {fileID: 739368126}
+  station: {fileID: 0}
 --- !u!1001 &733287464
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7813,7 +7862,7 @@ MonoBehaviour:
   teleportThreshold: 3
   count: {fileID: 379832982}
   countTimeTxt: {fileID: 2083777584}
-  startTime: 10
+  startTime: 30
   trainParticles: {fileID: 1655508393}
 --- !u!1 &1391080037
 GameObject:
@@ -16820,6 +16869,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8178535865196915241, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205786229221901424, guid: e76f351677a9771458d7dc01dca06fad, type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8919776824776038572, guid: e76f351677a9771458d7dc01dca06fad, type: 3}

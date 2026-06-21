@@ -14,8 +14,9 @@ public class GameManager : MonoSingleton<GameManager>
     public GameObject engineTrain;
     public GameObject station;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         if (trainInfoChangeSo != null)
         {
             trainInfoChangeSo.OnStationChange += StationChange;
@@ -24,6 +25,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void StationChange(Transform obj)
     {
+        Debug.Log("vv");
         station = obj.gameObject;
     }
 }
